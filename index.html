@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Turbo Footbal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/main.css" />
+    <script src="assets/app.js" type="module"></script>
+  </head>
+  <body>
+    <div class="error-wrapper hide" id="error">
+      <div class="error-content">
+        <p></p>
+        <button id="reloadBtn">Reload</button>
+      </div>
+    </div>
+
+    <div class="loading-screen__wrapper hide" id="LoadingScreen">
+      <div class="loading-logo__wrapper">
+        <h1>Turbo Fotbal</h1>
+        <div class="soccer-ball-loader"></div>
+        <p class="text-center">Loading...</p>
+      </div>
+    </div>
+    <div id="GameScreen" class="main">
+      <header class="top-info-bar">
+        <span>Turbo Footbal: Tournament 56</span>
+        <span id="countdown">0</span>
+      </header>
+      <div class="main-content">
+        <div class="league-display">
+          <table class="legue-table">
+            <thead>
+              <tr>
+                <th colspan="2">Pos</th>
+                <th>P</th>
+                <th>W</th>
+                <th>D</th>
+                <th>L</th>
+                <th>F</th>
+                <th>A</th>
+                <th>GD</th>
+                <th>PTS</th>
+              </tr>
+            </thead>
+            <tbody id="league-body"></tbody>
+          </table>
+        </div>
+
+        <div class="top-info-bar">
+          <span>Gameweek 6B</span>
+          <span>Bets: 0</span>
+        </div>
+        <main class="match-betting-options" id="match-betting-options"></main>
+      </div>
+      <footer class="betting-footer">
+        <div class="container">
+          <div class="bet-type-selector">
+            <button id="bet-type-singles" class="bet-type-btn" disabled>
+              Singles
+            </button>
+            <button id="bet-type-accumulator" class="bet-type-btn" disabled>
+              Accumulator
+            </button>
+          </div>
+          <div class="betting-controls">
+            <div class="stake-control-wrapper">
+              <div class="stake-control">
+                <button class="stake-up">
+                  <span class="arrow-left" />
+                </button>
+                <span class="stake-input"></span>
+                <button class="stake-down" @click.prevent="increase">
+                  <span class="arrow-right" />
+                </button>
+              </div>
+            </div>
+            <div class="bet-button-container">
+              <button class="bet-button">Bet</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="bet-info">
+          <div class="outlay-display">
+            Outlay: <span id="total-outlay">0.00</span>
+          </div>
+          <div class="max-win-display">
+            Max Win: <span id="max-win">0.00</span>
+          </div>
+        </div>
+        <div class="game-info-bar">
+          <span>Turbo Footbal</span>
+          <span>Balance: <span class="text-bold" id="balance"></span> </span>
+        </div>
+      </footer>
+
+      <div id="transition-screen" class="transition-screen overlay hide">
+        <div class="overlay-content">
+          <h1>Turbo Footbal</h1>
+          <div class="soccer-ball-loader"></div>
+          <p>Playing Matches...</p>
+        </div>
+      </div>
+      <div id="results-screen" class="overlay hide">
+        <div class="overlay-content">
+          <h2 id="results-round-name">Match Results</h2>
+          <div id="results-list" class="results-list"></div>
+          <!-- NEW: Container for the profit/loss summary -->
+          <div id="round-summary" class="round-summary"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

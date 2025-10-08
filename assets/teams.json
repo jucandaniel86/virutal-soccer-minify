@@ -1,0 +1,349 @@
+{
+  "tournament_id": 1769,
+  "game_round_played": 0,
+  "played_at": "2025-09-23 15:13:27",
+  "current_game_round": 1,
+  "next_game_round_played_at": "2025-09-23 15:14:07",
+  "time_to_next_round": 34,
+  "match_results": [],
+  "league_group_standings": [
+    {
+      "group_id": 1,
+      "standings": [
+        {
+          "position": 1,
+          "team_id": 1,
+          "team_name": "PSG",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 2,
+          "team_id": 2,
+          "team_name": "Barcelona",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 3,
+          "team_id": 3,
+          "team_name": "Liverpool",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 4,
+          "team_id": 4,
+          "team_name": "Real Madrid",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 5,
+          "team_id": 5,
+          "team_name": "Arsenal",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 6,
+          "team_id": 6,
+          "team_name": "Man City",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 7,
+          "team_id": 7,
+          "team_name": "Bayern Munich",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 8,
+          "team_id": 8,
+          "team_name": "Chelsea",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 9,
+          "team_id": 9,
+          "team_name": "Napoli",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 10,
+          "team_id": 10,
+          "team_name": "Inter",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 11,
+          "team_id": 11,
+          "team_name": "Atl. Madrid",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 12,
+          "team_id": 12,
+          "team_name": "Newcastle",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 13,
+          "team_id": 13,
+          "team_name": "Tottenham",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 14,
+          "team_id": 14,
+          "team_name": "Juventus",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 15,
+          "team_id": 15,
+          "team_name": "Dortmund",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 16,
+          "team_id": 16,
+          "team_name": "Atalanta",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 17,
+          "team_id": 17,
+          "team_name": "Ath. Bilbao",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 18,
+          "team_id": 18,
+          "team_name": "Leverkusen",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 19,
+          "team_id": 19,
+          "team_name": "Benfica",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 20,
+          "team_id": 20,
+          "team_name": "Villareal",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 21,
+          "team_id": 21,
+          "team_name": "Eintracht",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 22,
+          "team_id": 22,
+          "team_name": "Marseille",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 23,
+          "team_id": 23,
+          "team_name": "Monaco",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 24,
+          "team_id": 24,
+          "team_name": "PSV",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 25,
+          "team_id": 25,
+          "team_name": "Ajax",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 26,
+          "team_id": 26,
+          "team_name": "Sporting",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 27,
+          "team_id": 27,
+          "team_name": "Brugge",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 28,
+          "team_id": 28,
+          "team_name": "Union SG",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 29,
+          "team_id": 29,
+          "team_name": "Galatasaray",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 30,
+          "team_id": 30,
+          "team_name": "Oly. Piraeus",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 31,
+          "team_id": 31,
+          "team_name": "Slavia Prague",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 32,
+          "team_id": 32,
+          "team_name": "Bodo/Glint",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 33,
+          "team_id": 33,
+          "team_name": "Copenhagen",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 34,
+          "team_id": 34,
+          "team_name": "Pafos",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 35,
+          "team_id": 35,
+          "team_name": "Qarabag",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "position": 36,
+          "team_id": 36,
+          "team_name": "Kairat Almaty",
+          "stats": [0, 0, 0, 0, 0, 0, 0, 0]
+        }
+      ]
+    }
+  ],
+  "next_matches": [
+    {
+      "match_id": 4484,
+      "team_a_id": 24,
+      "team_a_name": "PSV",
+      "team_b_id": 28,
+      "team_b_name": "Union SG",
+      "code": 119,
+      "odds": [2.51, 3.4, 2.8]
+    },
+    {
+      "match_id": 4485,
+      "team_a_id": 17,
+      "team_a_name": "Ath. Bilbao",
+      "team_b_id": 5,
+      "team_b_name": "Arsenal",
+      "code": 129,
+      "odds": [3.53, 3.66, 2.03]
+    },
+    {
+      "match_id": 4486,
+      "team_a_id": 14,
+      "team_a_name": "Juventus",
+      "team_b_id": 15,
+      "team_b_name": "Dortmund",
+      "code": 119,
+      "odds": [2.51, 3.4, 2.8]
+    },
+    {
+      "match_id": 4487,
+      "team_a_id": 19,
+      "team_a_name": "Benfica",
+      "team_b_id": 35,
+      "team_b_name": "Qarabag",
+      "code": 114,
+      "odds": [2.21, 3.53, 3.17]
+    },
+    {
+      "match_id": 4488,
+      "team_a_id": 13,
+      "team_a_name": "Tottenham",
+      "team_b_id": 20,
+      "team_b_name": "Villareal",
+      "code": 117,
+      "odds": [2.38, 3.53, 2.89]
+    },
+    {
+      "match_id": 4489,
+      "team_a_id": 4,
+      "team_a_name": "Real Madrid",
+      "team_b_id": 30,
+      "team_b_name": "Oly. Piraeus",
+      "code": 106,
+      "odds": [1.59, 3.97, 5.95]
+    },
+    {
+      "match_id": 4490,
+      "team_a_id": 31,
+      "team_a_name": "Slavia Prague",
+      "team_b_id": 32,
+      "team_b_name": "Bodo/Glint",
+      "code": 120,
+      "odds": [2.57, 3.28, 2.8]
+    },
+    {
+      "match_id": 4491,
+      "team_a_id": 7,
+      "team_a_name": "Bayern Munich",
+      "team_b_id": 8,
+      "team_b_name": "Chelsea",
+      "code": 119,
+      "odds": [2.51, 3.4, 2.8]
+    }
+  ],
+  "previous_results": [],
+  "match_results": [
+    {
+      "match_id": 4656,
+      "team_a": [2, "Barcelona"],
+      "team_b": [1, "PSG"],
+      "score": [0, 1],
+      "result_1x2": 3,
+      "went_to_etp": 0,
+      "extra_time": "",
+      "penalties": ""
+    },
+    {
+      "match_id": 4657,
+      "team_a": [10, "Inter"],
+      "team_b": [16, "Atalanta"],
+      "score": [2, 0],
+      "result_1x2": 1,
+      "went_to_etp": 0,
+      "extra_time": "",
+      "penalties": ""
+    },
+    {
+      "match_id": 4658,
+      "team_a": [3, "Liverpool"],
+      "team_b": [27, "Brugge"],
+      "score": [3, 1],
+      "result_1x2": 1,
+      "went_to_etp": 0,
+      "extra_time": "",
+      "penalties": ""
+    },
+    {
+      "match_id": 4659,
+      "team_a": [7, "Bayern Munich"],
+      "team_b": [14, "Juventus"],
+      "score": [1, 0],
+      "result_1x2": 1,
+      "went_to_etp": 0,
+      "extra_time": "",
+      "penalties": ""
+    }
+  ]
+}
