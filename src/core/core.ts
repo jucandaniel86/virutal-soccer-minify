@@ -5,12 +5,14 @@ import {
   RoomTypesType,
   PublicViewType,
   BetItemType,
+  PlayerViewType,
+  CreditType,
 } from "../config/app";
 import BetOptions from "./core.BetOptions";
 import ModalCore from "./core.Modal";
 import Renders from "./core.Renders";
 import StakeSelector from "./core.StakeSelector";
-import { isset } from "./core.Utils";
+import { animateStar, isset } from "./core.Utils";
 import WSCore from "./core.Websocket";
 
 //Core Libraries
@@ -18,9 +20,11 @@ export let __Websocket: WSCore;
 export let __StakeSelector: StakeSelector;
 export let __CurrentRoom: RoomTypesType = null;
 export let __PublicView: PublicViewType = null;
+export let __PlayerView: PlayerViewType = null;
 export let __Renders: Renders = null;
 export let __BetOptions: BetOptions;
 export let __Modal: ModalCore;
+export let __Credit: CreditType = null;
 
 //Game Vars
 export let __CurrentStake = 0;
@@ -98,6 +102,7 @@ export const onResponse = (response: any) => {
     case RGS_ACTIONS.LOGIN:
       __StakeSelector.init(response);
       __Renders.renderBalance(response.credit);
+      __Credit = response.credit;
       startGame(APP_STATE.LOBBY);
       break;
     case RGS_ACTIONS.LOBBY:
@@ -110,11 +115,17 @@ export const onResponse = (response: any) => {
     case RGS_ACTIONS.JOIN:
       startGame(APP_STATE.GAME);
       __PublicView = response.publicView;
+      __PlayerView = response.playerView;
       //call renders
       __Renders.renderLeagueTable(__PublicView.tournament.league);
       __Renders.renderCountdownTimer(__PublicView.secsToExtr);
-      __Renders.renderMatchBettingOptions(__PublicView.currentRound);
-
+      if (!__PublicView.tournament.isEnded) {
+        __Renders.renderMatchBettingOptions(__PublicView.currentRound);
+      } else {
+        __Renders.renderKnockoutResults(
+          __PublicView.tournament.knockout.rounds
+        );
+      }
       __BetOptions.init({
         onBetChange: handleBetsChange,
       });
@@ -125,13 +136,20 @@ export const onResponse = (response: any) => {
 
 export const onBroadcastResponse = (response: any) => {
   __PublicView = response.publicView;
+  __PlayerView = response.playerView;
 
   //call renders
   __Renders.renderMatchResults(__PublicView.previousRound, __CurrentRoom.name);
   __Renders.renderLeagueTable(__PublicView.tournament.league);
   __Renders.renderCountdownTimer(__PublicView.secsToExtr);
   __Renders.renderRoundName(__PublicView.currentRound);
-  __Renders.renderMatchBettingOptions(__PublicView.currentRound);
+  __Renders.renderPlayerView(__PlayerView, __Credit);
+
+  if (!__PublicView.tournament.isEnded) {
+    __Renders.renderMatchBettingOptions(__PublicView.currentRound);
+  } else {
+    __Renders.renderKnockoutResults(__PublicView.tournament.knockout.rounds);
+  }
 
   __BetOptions.init({
     onBetChange: handleBetsChange,
@@ -153,6 +171,7 @@ const handlePlaceBet = async () => {
     stake: __CurrentStake,
   }));
   __Websocket.bet(CurrentBets);
+  await animateStar();
   await __Modal.showBetModal();
   __BetOptions.resetBets();
 };

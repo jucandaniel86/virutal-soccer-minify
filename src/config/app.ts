@@ -48,10 +48,6 @@ export type LegueData = {
   };
 };
 
-export type TournamentType = {
-  league: LegueData;
-};
-
 export type RoundMatchesType = {
   hm: string;
   id: string;
@@ -60,6 +56,20 @@ export type RoundMatchesType = {
   t2: string;
   sc?: number[];
   ot?: string;
+};
+
+export type KnockoutRound = {
+  index: number;
+  name: string;
+  matches: RoundMatchesType[];
+};
+
+export type TournamentType = {
+  league: LegueData;
+  isEnded: boolean;
+  knockout: {
+    rounds: KnockoutRound[];
+  };
 };
 
 export type CurrentRoundType = {
@@ -76,8 +86,19 @@ export type PublicViewType = {
   previousRound: CurrentRoundType;
 };
 
+export type PlayerViewType = {
+  name: string;
+  playerId: string;
+  totalWin: number;
+};
+
 export type BetItemType = {
   stake: number;
   matchId: string;
   outcome: string;
+};
+
+export type CreditType = {
+  amount: number;
+  currency: string;
 };

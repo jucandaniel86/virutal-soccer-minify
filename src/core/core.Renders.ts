@@ -1,4 +1,11 @@
-import { CurrentRoundType, LegueData, RoomTypesType } from "../config/app";
+import {
+  CreditType,
+  CurrentRoundType,
+  KnockoutRound,
+  LegueData,
+  PlayerViewType,
+  RoomTypesType,
+} from "../config/app";
 
 export default class Renders {
   countdownInterval: any = null;
@@ -74,11 +81,43 @@ export default class Renders {
     });
   }
 
-  renderKnockoutResults(payload: CurrentRoundType) {
+  renderKnockoutResults(payload: KnockoutRound[]) {
     const knockOutDiv = document.querySelector("#knockout-results-display");
-    if (!knockOutDiv) return;
+    const leagueTable = document.querySelector(".legue-table");
+    const knockOutTable = document.querySelector(".knockout-results-table");
 
+    if (!knockOutDiv || !knockOutDiv) return;
+
+    if (leagueTable) {
+      leagueTable.classList.add("hide");
+    }
     knockOutDiv.classList.remove("hide");
+
+    payload.forEach((roundData) => {
+      const h3 = document.createElement("h3");
+      h3.textContent = roundData.name;
+      h3.classList.add("knockout-round-title");
+      knockOutDiv.appendChild(h3);
+
+      let tableHTML = `
+                        <table class="knockout-results-table">
+                            <tr>
+                                <th>Match</th>
+                                <th>Score</th>
+                            </tr>
+                    `;
+
+      roundData.matches.forEach((result) => {
+        tableHTML += `
+						<tr>
+								<td>${result.t1} vs ${result.t2}</td>
+								<td>${result.sc[0]} - ${result.sc[1]}</td>
+						</tr>
+				`;
+      });
+      tableHTML += "</table>";
+      knockOutDiv.innerHTML += tableHTML;
+    });
   }
 
   renderRoundName(payload: CurrentRoundType) {
@@ -157,5 +196,19 @@ export default class Renders {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     if (resultsScreenEl) resultsScreenEl.classList.add("hide");
+  }
+
+  renderPlayerView(playerView: PlayerViewType, credit: CreditType) {
+    const roundSummaryEl = document.querySelector("#round-summary");
+    if (!roundSummaryEl) return;
+
+    if (!playerView) {
+      roundSummaryEl.innerHTML = "";
+      return;
+    }
+
+    roundSummaryEl.innerHTML = `  <div>Total Win: ${
+      credit.currency
+    }${playerView.totalWin.toFixed(2)}</div>`;
   }
 }
