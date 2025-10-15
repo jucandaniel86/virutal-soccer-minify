@@ -150,6 +150,7 @@ body {
   cursor: pointer;
   font-size: 0.9em;
   font-size: 18px;
+  font-weight: bold;
 }
 
 .odds-buttons button.active,
@@ -591,4 +592,25 @@ body {
   border-top: 1px solid #ddd;
   font-size: 0.9em;
   line-height: 1.6;
+}
+
+#round-name {
+  font-weight: bold;
+}
+
+.odds-header {
+  cursor: text !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  border: none !important;
+  color: #ccc !important;
+}
+
+.match-fixture:first-child {
+  border: none;
+  padding: 0;
+  top: -10px;
+  position: sticky;
+  background-color: #fff;
+  padding-top: 10px;
 }
