@@ -68,15 +68,15 @@ export default class Renders {
     if (!HTMLDiv || payload.matches.length === 0) return;
     HTMLDiv.innerHTML = "";
 
-    const headersDiv = document.querySelector("div");
+    const headersDiv = document.createElement("div");
     headersDiv.className = "match-fixture";
 
     const headers = `<div class="team-container"></div>
-		<div class="odds-buttons"> 
-			<button class="odds-header">1</button>
-			<button class="odds-header">X</button>
-			<button class="odds-header">2</button>
-		</div>`;
+    <div class="odds-buttons">
+    	<span class="odds-header">1</span>
+    	<span class="odds-header">X</span>
+    	<span class="odds-header">2</span>
+    </div>`;
     headersDiv.innerHTML = headers;
     HTMLDiv.appendChild(headersDiv);
 
