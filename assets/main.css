@@ -74,6 +74,7 @@ body {
   border-radius: var(--header-border-radius);
   margin-top: 10px;
   cursor: pointer;
+  font-weight: bold;
 }
 
 .legue-table {

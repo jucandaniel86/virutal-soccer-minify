@@ -89,11 +89,14 @@ export type PublicViewType = {
 export type PlayerViewType = {
   name: string;
   playerId: string;
+  profit: number;
+  returned: number;
+  staked: number;
   totalWin: number;
 };
 
 export type BetItemType = {
-  stake: number;
+  stake: number | string;
   matchId: string;
   outcome: string;
 };

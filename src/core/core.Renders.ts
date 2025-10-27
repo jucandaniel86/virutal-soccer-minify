@@ -86,25 +86,55 @@ export default class Renders {
       const odds = match.odds;
 
       if (odds) {
-        matchEl.innerHTML = `<div class="teams-container"><div class="team-name team-a">${match.t1}</div><div class="team-name team-b">${match.t2}</div></div><div class="odds-buttons"><button data-match-id="${match.id}" data-outcome="1" data-odds="${odds[0]}" class="odds-selector">${odds[0]}</button><button data-match-id="${match.id}" data-outcome="X" data-odds="${odds[1]}" class="odds-selector">${odds[1]}</button><button data-match-id="${match.id}" data-outcome="2" data-odds="${odds[2]}" class="odds-selector">${odds[2]}</button></div>`;
+        matchEl.innerHTML = `<div class="teams-container"><div class="team-name team-a">${match.t1}</div><div class="team-name team-b">${match.t2}</div></div><div class="odds-buttons"><button data-match-id="${match.id}" data-outcome="T1" data-odds="${odds[0]}" class="odds-selector">${odds[0]}</button><button data-match-id="${match.id}" data-outcome="D" data-odds="${odds[1]}" class="odds-selector">${odds[1]}</button><button data-match-id="${match.id}" data-outcome="T2" data-odds="${odds[2]}" class="odds-selector">${odds[2]}</button></div>`;
 
         HTMLDiv.appendChild(matchEl);
       }
     });
   }
 
+  resetKnockoutResults() {
+    const oddsHeaderEl = document.querySelector(".match-info-bar");
+    const bettingOptionsEl = document.querySelector("#match-betting-options");
+    const knockOutDiv = document.querySelector("#knockout-results-display");
+    const leagueTable = document.querySelector(".legue-table");
+
+    if (oddsHeaderEl) {
+      oddsHeaderEl.classList.remove("hide");
+    }
+    if (bettingOptionsEl) {
+      bettingOptionsEl.classList.remove("hide");
+    }
+
+    if (knockOutDiv) {
+      knockOutDiv.classList.add("hide");
+    }
+
+    if (leagueTable) {
+      leagueTable.classList.remove("hide");
+    }
+  }
+
   renderKnockoutResults(payload: KnockoutRound[]) {
     const knockOutDiv = document.querySelector("#knockout-results-display");
     const leagueTable = document.querySelector(".legue-table");
     const knockOutTable = document.querySelector(".knockout-results-table");
+    const oddsHeaderEl = document.querySelector(".match-info-bar");
+    const bettingOptionsEl = document.querySelector("#match-betting-options");
 
     if (!knockOutDiv || !knockOutDiv) return;
 
     if (leagueTable) {
       leagueTable.classList.add("hide");
     }
+    if (bettingOptionsEl) {
+      bettingOptionsEl.classList.add("hide");
+    }
     knockOutDiv.classList.remove("hide");
 
+    if (oddsHeaderEl) {
+      oddsHeaderEl.classList.add("hide");
+    }
     payload.forEach((roundData) => {
       const h3 = document.createElement("h3");
       h3.textContent = roundData.name;
@@ -165,7 +195,7 @@ export default class Renders {
 
     return new Promise<void>((resolve) => {
       if (resultsListEl) resultsListEl.innerHTML = "";
-      if (roundSummaryEl) roundSummaryEl.innerHTML = "";
+      // if (roundSummaryEl) roundSummaryEl.innerHTML = "";
       if (!fullData || !fullData.matches || !resultsListEl) {
         resolve();
         return;
@@ -219,8 +249,16 @@ export default class Renders {
       return;
     }
 
-    roundSummaryEl.innerHTML = `  <div>Total Win: ${
+    roundSummaryEl.innerHTML = `<div>Staked: ${
       credit.currency
-    }${playerView.totalWin.toFixed(2)}</div>`;
+    } <b>${playerView.staked.toFixed(2)}</b></div>
+                                <div>Returns: ${
+                                  credit.currency
+                                } <b>${playerView.returned.toFixed(2)}</b></div>
+                                <div>Profit: ${
+                                  credit.currency
+                                } <b>${playerView.totalWin.toFixed(
+      2
+    )}</b></div>`;
   }
 }

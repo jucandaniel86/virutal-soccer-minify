@@ -146,6 +146,7 @@ export const onBroadcastResponse = (response: any) => {
   __Renders.renderPlayerView(__PlayerView, __Credit);
 
   if (!__PublicView.tournament.isEnded) {
+    __Renders.resetKnockoutResults();
     __Renders.renderMatchBettingOptions(__PublicView.currentRound);
   } else {
     __Renders.renderKnockoutResults(__PublicView.tournament.knockout.rounds);
@@ -167,8 +168,8 @@ const handlePlaceBet = async () => {
 
   const CurrentBets = __CurrentBets.map((bet: any) => ({
     matchId: bet.matchId,
-    outcome: bet.outcome,
-    stake: __CurrentStake,
+    outcome: `${bet.outcome}`,
+    stake: parseFloat(Number(__CurrentStake).toFixed(2)),
   }));
   __Websocket.bet(CurrentBets);
   await animateStar();
