@@ -40,6 +40,14 @@ const setGameTitle = () => {
   document.head.title = GAME_NAME;
 };
 
+const setGameHeight = () => {
+  const mainEl = document.querySelector(".main");
+  if (mainEl) {
+    //@ts-ignore
+    mainEl.style.height = window.innerHeight + "px";
+  }
+};
+
 const handleReloadButton = () => {
   document.querySelector("#reloadBtn").addEventListener("click", (e) => {
     e.preventDefault();
@@ -211,6 +219,7 @@ export const __init = () => {
     );
 
   setGameTitle();
+  setGameHeight();
   handleReloadButton();
   startGame(APP_STATE.INIT);
 };

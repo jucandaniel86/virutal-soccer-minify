@@ -23,7 +23,7 @@ const resolve = {
   extensions: [".tsx", ".ts", ".js"],
 };
 const output = {
-  filename: "bundle.js",
+  filename: "[hash].js",
   path: _resolve(__dirname, "build"),
 };
 const devServer = {
@@ -38,7 +38,7 @@ const plugins = [
     template: "src/index.html",
   }),
   new MiniCssExtractPlugin({
-    filename: "bundle.css",
+    filename: "[hash].css",
   }),
 ];
 
