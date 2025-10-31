@@ -289,6 +289,7 @@ body {
   align-items: center;
   text-align: center;
   color: #333;
+  overflow: hidden;
 }
 
 .overlay-content,
@@ -296,6 +297,10 @@ body {
   width: 100%;
   padding: 20px;
   text-align: center;
+}
+
+.overlay-content {
+  height: calc(100% - 40px);
 }
 
 .overlay-content h1 {
@@ -362,6 +367,9 @@ body {
 
 .results-list {
   margin-top: 20px;
+  height: calc(70% - 20px);
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 .main-score-line {

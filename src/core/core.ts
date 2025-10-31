@@ -42,9 +42,16 @@ const setGameTitle = () => {
 
 const setGameHeight = () => {
   const mainEl = document.querySelector(".main");
+  const overlay = document.querySelectorAll(".overlay");
   if (mainEl) {
     //@ts-ignore
     mainEl.style.height = window.innerHeight + "px";
+  }
+  if (overlay) {
+    Array.from(overlay).forEach((element) => {
+      //@ts-ignore
+      element.style.height = window.innerHeight - 56 + "px";
+    });
   }
 };
 

@@ -25,6 +25,7 @@ const resolve = {
 const output = {
   filename: "[hash].js",
   path: _resolve(__dirname, "build"),
+  clean: true,
 };
 const devServer = {
   static: join(__dirname, "build"),
