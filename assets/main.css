@@ -1,5 +1,6 @@
 :root {
-  --base-color: #326c60;
+  --base-color: #e10a0a;
+  --base-color-700: #c10707;
   --global-padding: 0px 10px;
   --global-padding-left: 10px;
   --global-padding-right: 10px;
@@ -48,6 +49,15 @@ body {
   margin: 0 auto;
 }
 
+.loading-logo__wrapper {
+  width: 100%;
+  max-width: 450px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
 .main-content {
   flex: 1;
   overflow-y: auto;
@@ -92,12 +102,25 @@ body {
   font-size: 14px;
 }
 
+.legue-table thead th b {
+  font-weight: 700 !important;
+}
+
 .legue-table tbody td {
   padding: 8px 4px;
   text-align: left;
   border-bottom: 1px solid #eee;
   color: var(--league-table-body-color);
   font-size: 16px;
+}
+
+.legue-table thead th,
+.legue-table tbody td {
+  text-align: center;
+}
+
+.legue-table tbody td:last-child {
+  text-align: center;
 }
 .text-bold {
   font-weight: 700;
@@ -219,7 +242,7 @@ body {
   background-color: var(--base-color);
   border-radius: var(--global-border-radius);
   flex: 1;
-  border: 1px solid #224e45;
+  border: 1px solid var(--base-color-700);
   height: var(--bet-buttons-height);
 }
 
@@ -414,7 +437,7 @@ body {
 .knockout-results-table td {
   padding: 6px;
   text-align: left;
-  border-bottom: 1px solid #2a2a4a;
+  border-bottom: 1px solid #f2f2f2;
 }
 
 .knockout-results-table th {
@@ -643,4 +666,25 @@ body {
 .h-100 {
   height: 100% !important;
   max-height: 100% !important;
+}
+
+#outright-screen {
+  top: 56px;
+  bottom: 135px;
+  align-items: flex-start;
+}
+
+.outright-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  background-image: url(./virginbet-logo.png);
+  background-size: cover;
+  width: 100% !important;
+  height: 80px;
+  display: block;
 }

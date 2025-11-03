@@ -25,9 +25,13 @@ export default class Renders {
     //render headers
     const htmlTableHead = htmlTable.querySelector("thead");
     const row = document.createElement("tr");
-    payload.gridData.headers.forEach((header) => {
+    const borderedTh = [0, 1, 9];
+    payload.gridData.headers.forEach((header, index) => {
       const col = document.createElement("th");
-      col.innerHTML = header;
+      let html = borderedTh.indexOf(index) !== -1 ? "<b>" : "";
+      html += header;
+      html += borderedTh.indexOf(index) !== -1 ? "</b>" : "";
+      col.innerHTML = html;
       row.appendChild(col);
     });
 
@@ -38,9 +42,9 @@ export default class Renders {
 
         element.forEach((_colElement, index) => {
           const col = document.createElement("td");
-          let html = index > 1 ? "<b>" : "";
+          let html = index + 1 === element.length ? "<b>" : "";
           html += _colElement;
-          html += index > 1 ? "</b>" : "";
+          html += index + 1 === element.length ? "</b>" : "";
           col.innerHTML = html;
           bodyRow.appendChild(col);
         });
@@ -48,6 +52,21 @@ export default class Renders {
       }
     });
     htmlTableHead.appendChild(row);
+  }
+
+  renderOutrightWinnerBets(outrightData: any[]) {
+    const outrightContent = document.querySelector("#outright-content");
+
+    if (!outrightContent || !outrightData || !outrightData) return;
+    outrightContent.innerHTML = "";
+    outrightData.forEach((selection) => {
+      const btn = document.createElement("button");
+      btn.className = "outright-bet-btn";
+      btn.textContent = `${selection.team_name} - ${selection.odds}`;
+      btn.dataset.teamId = selection.team_id;
+      btn.dataset.odds = selection.odds;
+      outrightContent.appendChild(btn);
+    });
   }
 
   renderCountdownTimer(seconds: number) {
@@ -175,7 +194,7 @@ export default class Renders {
       let tableHTML = `
                         <table class="knockout-results-table">
                             <tr>
-                                <th>Match</th>
+                                <th width="90%">Match</th>
                                 <th>Score</th>
                             </tr>
                     `;

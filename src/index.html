@@ -22,6 +22,7 @@
 
     <div class="loading-screen__wrapper hide" id="LoadingScreen">
       <div class="loading-logo__wrapper">
+        <span class="logo"></span>
         <h1>Turbo Fotbal</h1>
         <div class="soccer-ball-loader"></div>
         <p class="text-center">Loading...</p>
@@ -95,6 +96,7 @@
 
       <div id="transition-screen" class="transition-screen overlay hide">
         <div class="overlay-content loading-screen-content">
+          <span class="logo"></span>
           <h1>Turbo Footbal</h1>
           <div class="soccer-ball-loader"></div>
           <p>Playing Matches...</p>
@@ -106,6 +108,22 @@
           <div id="results-list" class="results-list"></div>
           <!-- NEW: Container for the profit/loss summary -->
           <div id="round-summary" class="round-summary"></div>
+        </div>
+      </div>
+
+      <div id="outright-screen" class="overlay hide">
+        <div class="outright-container">
+          <div class="outright-menu">
+            <button id="outright-winner-btn" class="bet-type-btn selected">
+              Outright Winner
+            </button>
+            <button id="group-winners-btn" class="bet-type-btn">
+              Group Winners
+            </button>
+          </div>
+          <div id="outright-content" class="outright-content">
+            <!-- Outright betting options will be dynamically inserted here -->
+          </div>
         </div>
       </div>
 
