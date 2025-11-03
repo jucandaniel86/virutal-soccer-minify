@@ -30,7 +30,7 @@ export default class ModalCore {
     const betModal: HTMLDivElement = document.querySelector("#bet-modal");
     const betModalClose = document.querySelector(".modal-close-btn");
 
-    this.showModal(betModal, "Outright Bet Placed Successfully");
+    this.showModal(betModal, "Bet Placed Successfully");
 
     return new Promise((resolve) => {
       if (betModalClose) {

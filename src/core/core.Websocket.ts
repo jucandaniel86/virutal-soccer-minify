@@ -16,6 +16,7 @@ export default class WSCore {
   sessionID = "";
   lastAction: string = null;
   hasError = false;
+  heartbeatHandle: any = null;
   onResponse: (_payload: any) => void;
   onBroadcastResponse: (_payload: any) => void;
   onError: (message: any) => void;
@@ -109,15 +110,15 @@ export default class WSCore {
       return;
     }
 
+    switch (this.lastAction) {
+      case RGS_ACTIONS.LOGIN:
+        this.handleLoginResponse(_wsResponse.response);
+    }
+
     if (_wsResponse.response) {
       this.onResponse(_wsResponse.response);
     } else {
       this.onResponse(_wsResponse);
-    }
-
-    switch (this.lastAction) {
-      case "LOGIN":
-        return this.handleLoginResponse(_wsResponse.response);
     }
   }
 
@@ -178,9 +179,10 @@ export default class WSCore {
   }
 
   handleLoginResponse(payload: any) {
-    if (payload.playerDetails.sessionID) {
+    if (payload.playerDetails.fixedReference) {
       this.isLogged = true;
-      this.sessionID = payload.playerDetails.sessionID;
+      this.sessionID = payload.playerDetails.fixedReference;
+      this.resetHeartbeat();
     }
     return false;
   }
@@ -198,6 +200,38 @@ export default class WSCore {
         },
       },
     });
+  }
+
+  resetHeartbeat() {
+    // stop
+    this.stopHeartbeat();
+    // start again
+    this.startHeartbeat();
+  }
+
+  stopHeartbeat() {
+    if (this.heartbeatHandle !== null) {
+      clearTimeout(this.heartbeatHandle);
+    }
+  }
+
+  startHeartbeat() {
+    let nInterval = 20000;
+
+    // stop if started
+    if (this.heartbeatHandle !== null) {
+      clearTimeout(this.heartbeatHandle);
+    }
+
+    this.heartbeatHandle = setTimeout(() => {
+      if (this.sessionID) {
+        this.send({
+          requestType: RGS_ACTIONS.HEARTBEAT,
+        });
+      }
+      // start again
+      this.startHeartbeat();
+    }, nInterval);
   }
 
   log(message: string) {

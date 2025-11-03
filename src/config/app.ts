@@ -11,6 +11,7 @@ export enum RGS_ACTIONS {
   LOBBY = "lobby",
   JOIN = "join",
   GAME = "game",
+  HEARTBEAT = "heartbeat",
   BROADCAST = "broadcast",
 }
 

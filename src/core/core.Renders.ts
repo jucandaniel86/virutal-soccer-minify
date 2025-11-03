@@ -36,9 +36,12 @@ export default class Renders {
       if (Array.isArray(element) && element.length > 0) {
         const bodyRow = document.createElement("tr");
 
-        element.forEach((_colElement) => {
+        element.forEach((_colElement, index) => {
           const col = document.createElement("td");
-          col.innerHTML = _colElement;
+          let html = index > 1 ? "<b>" : "";
+          html += _colElement;
+          html += index > 1 ? "</b>" : "";
+          col.innerHTML = html;
           bodyRow.appendChild(col);
         });
         htmlBody.appendChild(bodyRow);
@@ -98,6 +101,9 @@ export default class Renders {
     const bettingOptionsEl = document.querySelector("#match-betting-options");
     const knockOutDiv = document.querySelector("#knockout-results-display");
     const leagueTable = document.querySelector(".legue-table");
+    const betDetails = document.querySelector(".bet-details");
+    const betInfo = document.querySelector(".bet-info");
+    const leagueDisplay = document.querySelector(".league-display");
 
     if (oddsHeaderEl) {
       oddsHeaderEl.classList.remove("hide");
@@ -113,6 +119,18 @@ export default class Renders {
     if (leagueTable) {
       leagueTable.classList.remove("hide");
     }
+
+    if (betDetails) {
+      betDetails.classList.remove("hide");
+    }
+
+    if (betInfo) {
+      betInfo.classList.remove("hide");
+    }
+
+    if (leagueDisplay) {
+      leagueDisplay.classList.remove("h-100");
+    }
   }
 
   renderKnockoutResults(payload: KnockoutRound[]) {
@@ -121,6 +139,9 @@ export default class Renders {
     const knockOutTable = document.querySelector(".knockout-results-table");
     const oddsHeaderEl = document.querySelector(".match-info-bar");
     const bettingOptionsEl = document.querySelector("#match-betting-options");
+    const betDetails = document.querySelector(".bet-details");
+    const betInfo = document.querySelector(".bet-info");
+    const leagueDisplay = document.querySelector(".league-display");
 
     if (!knockOutDiv || !knockOutDiv) return;
 
@@ -130,7 +151,17 @@ export default class Renders {
     if (bettingOptionsEl) {
       bettingOptionsEl.classList.add("hide");
     }
+    if (betDetails) {
+      betDetails.classList.add("hide");
+    }
+    if (betInfo) {
+      betInfo.classList.add("hide");
+    }
     knockOutDiv.classList.remove("hide");
+
+    if (leagueDisplay) {
+      leagueDisplay.classList.add("h-100");
+    }
 
     if (oddsHeaderEl) {
       oddsHeaderEl.classList.add("hide");
@@ -172,9 +203,15 @@ export default class Renders {
 
   renderTournamentName(payload: RoomTypesType) {
     const HTMLDivElement = document.querySelector("#tournament-name");
+    const EndTournamentTitle = document.querySelector(
+      "#knockout-results-title"
+    );
 
     if (HTMLDivElement) {
       HTMLDivElement.innerHTML = payload.name;
+    }
+    if (EndTournamentTitle) {
+      EndTournamentTitle.innerHTML = payload.name + " Results";
     }
   }
 
@@ -242,13 +279,26 @@ export default class Renders {
 
   renderPlayerView(playerView: PlayerViewType, credit: CreditType) {
     const roundSummaryEl = document.querySelector("#round-summary");
+    const resultsList = document.querySelector("#results-list");
+
     if (!roundSummaryEl) return;
 
     if (!playerView) {
+      roundSummaryEl.classList.add("hide");
       roundSummaryEl.innerHTML = "";
+      if (resultsList) {
+        //@ts-ignore
+        resultsList.style.height = "100%";
+      }
       return;
     }
 
+    if (resultsList) {
+      //@ts-ignore
+      resultsList.style.height = "calc(70% - 20px)";
+    }
+
+    roundSummaryEl.classList.remove("hide");
     roundSummaryEl.innerHTML = `<div>Staked: ${
       credit.currency
     } <b>${playerView.staked.toFixed(2)}</b></div>

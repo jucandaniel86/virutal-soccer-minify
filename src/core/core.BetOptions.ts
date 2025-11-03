@@ -60,6 +60,9 @@ export default class BetOptions {
     this.betAccumulatorBtn.disabled = this.bets.length < 2;
     this.betBtn.disabled = this.bets.length === 0;
 
+    this.betSingleBtn.textContent =
+      this.bets.length > 0 ? `Singles X${this.bets.length}` : "Singles";
+
     if (this.bets.length === 0) {
       this.betSingleBtn.classList.remove("active");
       this.betAccumulatorBtn.classList.remove("active");
@@ -67,6 +70,7 @@ export default class BetOptions {
     }
     if (this.bets.length === 1) {
       this.betSingleBtn.classList.add("active");
+
       this.betAccumulatorBtn.classList.remove("active");
       this.betAccumulatorBtn.textContent = "Accumulator";
       return;

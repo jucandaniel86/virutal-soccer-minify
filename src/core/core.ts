@@ -83,11 +83,7 @@ export const startGame = async (state: APP_STATE) => {
       __Websocket.lobby();
       break;
     case APP_STATE.JOIN:
-      if (
-        !__CurrentRoom ||
-        Array.isArray(__CurrentRoom.rooms) !== true ||
-        __CurrentRoom.rooms.length === 0
-      ) {
+      if (!__CurrentRoom) {
         return displayError("Invalid Room.");
       }
       __Websocket.join(__CurrentRoom.id);
