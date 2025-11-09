@@ -683,8 +683,29 @@ body {
 
 .logo {
   background-image: url(./virginbet-logo.png);
-  background-size: cover;
+  background-size: contain;
+  background-repeat: no-repeat;
   width: 100% !important;
   height: 80px;
   display: block;
+}
+
+.extra-info {
+  font-size: 0.8em;
+  color: #8a8a8a;
+  margin-top: 5px;
+  width: 100%;
+  text-align: center;
+}
+
+.text-left {
+  text-align: left !important;
+}
+
+#countdown {
+  background-color: #333;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 1.2em;
 }

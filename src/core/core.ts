@@ -4,9 +4,9 @@ import {
   RGS_ACTIONS,
   RoomTypesType,
   PublicViewType,
-  BetItemType,
   PlayerViewType,
   CreditType,
+  RoundTypesE,
 } from "../config/app";
 import BetOptions from "./core.BetOptions";
 import ModalCore from "./core.Modal";
@@ -29,11 +29,17 @@ export let __Credit: CreditType = null;
 //Game Vars
 export let __CurrentStake = 0;
 export let __CurrentBets: any[] = [];
+export let __BetType = 0;
+export let __ChampionshipEnded = false;
 
 const displayError = (message: string) => {
   const ErrorModalWrapper = document.querySelector("#error");
   ErrorModalWrapper.classList.remove("hide");
   ErrorModalWrapper.querySelector("p").innerHTML = message;
+};
+
+const setCurrentBetType = (_betType: number) => {
+  __BetType = _betType;
 };
 
 const setGameTitle = () => {
@@ -128,19 +134,49 @@ export const onResponse = (response: any) => {
       __PublicView = response.publicView;
       __PlayerView = response.playerView;
       //call renders
-      __Renders.renderLeagueTable(__PublicView.tournament.league);
-      __Renders.renderCountdownTimer(__PublicView.secsToExtr);
       if (!__PublicView.tournament.isEnded) {
         __Renders.renderMatchBettingOptions(__PublicView.currentRound);
       } else {
-        __Renders.renderKnockoutResults(
-          __PublicView.tournament.knockout.rounds
-        );
+        __Renders.renderKnockoutResults(__PublicView.tournament);
       }
+
+      const cRound = __PublicView.previousRound
+        ? __PublicView.previousRound
+        : __PublicView.currentRound;
+
+      if (cRound) {
+        switch (cRound.roundType) {
+          case RoundTypesE.LEAGUE:
+            __Renders.renderLeagueTable(__PublicView.tournament.league);
+            break;
+          case RoundTypesE.KNOCKOUT:
+            if (!__PublicView.tournament.isEnded) {
+              __Renders.renderKnockoutRounds(__PublicView.tournament);
+            }
+            break;
+        }
+      }
+      __ChampionshipEnded = __PublicView.tournament.isEnded;
+      __Renders.renderCountdownTimer(__PublicView.secsToExtr);
+
       __BetOptions.init({
         onBetChange: handleBetsChange,
+        onBetTypeChange: setCurrentBetType,
       });
       __Renders.renderRoundName(__PublicView.currentRound);
+      break;
+    case RGS_ACTIONS.GAME:
+      __PlayerView = response.playerView;
+      console.log("PLAYER_VIEW", __PlayerView);
+
+      if (typeof response.playerView.error !== "undefined") {
+        return __Modal.showModal(response.playerView.error.message);
+      }
+
+      __Modal.showBetModal(__PlayerView).then(() => {
+        __BetOptions.resetBets();
+      });
+
       break;
   }
 };
@@ -149,9 +185,18 @@ export const onBroadcastResponse = (response: any) => {
   __PublicView = response.publicView;
   __PlayerView = response.playerView;
 
+  const cRound: any = __PublicView.previousRound
+    ? __PublicView.currentRound
+    : __PublicView.previousRound;
+
   //call renders
-  __Renders.renderMatchResults(__PublicView.previousRound, __CurrentRoom.name);
-  __Renders.renderLeagueTable(__PublicView.tournament.league);
+  if (!__ChampionshipEnded) {
+    __Renders.renderMatchResults(
+      __PublicView.previousRound,
+      __CurrentRoom.name
+    );
+  }
+
   __Renders.renderCountdownTimer(__PublicView.secsToExtr);
   __Renders.renderRoundName(__PublicView.currentRound);
   __Renders.renderPlayerView(__PlayerView, __Credit);
@@ -160,13 +205,28 @@ export const onBroadcastResponse = (response: any) => {
     __Renders.resetKnockoutResults();
     __Renders.renderMatchBettingOptions(__PublicView.currentRound);
   } else {
-    __Renders.renderKnockoutResults(__PublicView.tournament.knockout.rounds);
+    __Renders.renderKnockoutResults(__PublicView.tournament);
+  }
+
+  if (cRound) {
+    switch (cRound.roundType) {
+      case RoundTypesE.LEAGUE:
+        __Renders.renderLeagueTable(__PublicView.tournament.league);
+        break;
+      case RoundTypesE.KNOCKOUT:
+        if (!__PublicView.tournament.isEnded) {
+          __Renders.renderKnockoutRounds(__PublicView.tournament);
+        }
+        break;
+    }
   }
 
   __BetOptions.init({
     onBetChange: handleBetsChange,
+    onBetTypeChange: setCurrentBetType,
   });
   __BetOptions.resetBets();
+  __ChampionshipEnded = __PublicView.tournament.isEnded;
 };
 
 const handleStakeChange = (_stake: any) => {
@@ -182,10 +242,8 @@ const handlePlaceBet = async () => {
     outcome: `${bet.outcome}`,
     stake: parseFloat(Number(__CurrentStake).toFixed(2)),
   }));
-  __Websocket.bet(CurrentBets);
+  __Websocket.bet(CurrentBets, __BetType);
   await animateStar();
-  await __Modal.showBetModal();
-  __BetOptions.resetBets();
 };
 
 export const __init = () => {

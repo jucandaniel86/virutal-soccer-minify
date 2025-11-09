@@ -4,7 +4,9 @@ import {
   KnockoutRound,
   LegueData,
   PlayerViewType,
+  PlayoffItemType,
   RoomTypesType,
+  TournamentType,
 } from "../config/app";
 
 export default class Renders {
@@ -42,10 +44,15 @@ export default class Renders {
 
         element.forEach((_colElement, index) => {
           const col = document.createElement("td");
+
           let html = index + 1 === element.length ? "<b>" : "";
           html += _colElement;
           html += index + 1 === element.length ? "</b>" : "";
           col.innerHTML = html;
+          if (index === 1) {
+            col.classList.add("text-left");
+          }
+
           bodyRow.appendChild(col);
         });
         htmlBody.appendChild(bodyRow);
@@ -152,7 +159,60 @@ export default class Renders {
     }
   }
 
-  renderKnockoutResults(payload: KnockoutRound[]) {
+  renderKnockoutRounds(payload: TournamentType) {
+    const knockOutDiv = document.querySelector("#knockout-results-display");
+    const leagueTable = document.querySelector(".legue-table");
+
+    if (!knockOutDiv) return;
+
+    if (leagueTable) {
+      leagueTable.classList.add("hide");
+    }
+
+    knockOutDiv.innerHTML = "";
+    payload.knockout.rounds.forEach((round) => {
+      //round header
+      const h3 = document.createElement("h3");
+      h3.textContent = round.name;
+      h3.classList.add("knockout-round-title");
+      knockOutDiv.appendChild(h3);
+
+      let tableHTML = `<table class="knockout-results-table">`;
+      tableHTML += "<tr>";
+      tableHTML += `<td width="70%">${round.gridData.headers[0]}</td>`;
+      if (round.isTwoLegged) {
+        tableHTML += `<td>${round.gridData.headers[1]}</td>`;
+        tableHTML += `<td>${round.gridData.headers[2]}</td>`;
+        tableHTML += `<td>${round.gridData.headers[3]}</td>`;
+      } else {
+        tableHTML += `<td>${round.gridData.headers[4]}</td>`;
+        tableHTML += `<td>${round.gridData.headers[5]}</td>`;
+        tableHTML += `<td>${round.gridData.headers[6]}</td>`;
+      }
+      tableHTML += "</tr>";
+
+      round.gridData.rows.forEach((result) => {
+        tableHTML += `<td width="70%">${result[0]}</td>`;
+        if (round.isTwoLegged) {
+          tableHTML += `<td>${result[1]}</td>`;
+          tableHTML += `<td>${result[2]}</td>`;
+          tableHTML += `<td>${result[3]}</td>`;
+        } else {
+          tableHTML += `<td>${result[4]}</td>`;
+          tableHTML += `<td>${result[5]}</td>`;
+          tableHTML += `<td>${result[6]}</td>`;
+        }
+
+        tableHTML += "</tr>";
+      });
+      tableHTML += "</table>";
+      knockOutDiv.innerHTML += tableHTML;
+    });
+
+    knockOutDiv.classList.remove("hide");
+  }
+
+  renderKnockoutResults(payload: TournamentType) {
     const knockOutDiv = document.querySelector("#knockout-results-display");
     const leagueTable = document.querySelector(".legue-table");
     const knockOutTable = document.querySelector(".knockout-results-table");
@@ -162,7 +222,7 @@ export default class Renders {
     const betInfo = document.querySelector(".bet-info");
     const leagueDisplay = document.querySelector(".league-display");
 
-    if (!knockOutDiv || !knockOutDiv) return;
+    if (!knockOutDiv) return;
 
     if (leagueTable) {
       leagueTable.classList.add("hide");
@@ -185,31 +245,47 @@ export default class Renders {
     if (oddsHeaderEl) {
       oddsHeaderEl.classList.add("hide");
     }
-    payload.forEach((roundData) => {
+    knockOutDiv.innerHTML = "";
+    payload.knockout.rounds.forEach((round) => {
+      //round header
       const h3 = document.createElement("h3");
-      h3.textContent = roundData.name;
+      h3.textContent = round.name;
       h3.classList.add("knockout-round-title");
       knockOutDiv.appendChild(h3);
 
-      let tableHTML = `
-                        <table class="knockout-results-table">
-                            <tr>
-                                <th width="90%">Match</th>
-                                <th>Score</th>
-                            </tr>
-                    `;
+      let tableHTML = `<table class="knockout-results-table">`;
+      tableHTML += "<tr>";
+      tableHTML += `<td width="70%">${round.gridData.headers[0]}</td>`;
+      if (round.isTwoLegged) {
+        tableHTML += `<td>${round.gridData.headers[1]}</td>`;
+        tableHTML += `<td>${round.gridData.headers[2]}</td>`;
+        tableHTML += `<td>${round.gridData.headers[3]}</td>`;
+      } else {
+        tableHTML += `<td>${round.gridData.headers[4]}</td>`;
+        tableHTML += `<td>${round.gridData.headers[5]}</td>`;
+        tableHTML += `<td>${round.gridData.headers[6]}</td>`;
+      }
+      tableHTML += "</tr>";
 
-      roundData.matches.forEach((result) => {
-        tableHTML += `
-						<tr>
-								<td>${result.t1} vs ${result.t2}</td>
-								<td>${result.sc[0]} - ${result.sc[1]}</td>
-						</tr>
-				`;
+      round.gridData.rows.forEach((result) => {
+        tableHTML += `<td width="70%">${result[0]}</td>`;
+        if (round.isTwoLegged) {
+          tableHTML += `<td>${result[1]}</td>`;
+          tableHTML += `<td>${result[2]}</td>`;
+          tableHTML += `<td>${result[3]}</td>`;
+        } else {
+          tableHTML += `<td>${result[4]}</td>`;
+          tableHTML += `<td>${result[5]}</td>`;
+          tableHTML += `<td>${result[6]}</td>`;
+        }
+
+        tableHTML += "</tr>";
       });
       tableHTML += "</table>";
       knockOutDiv.innerHTML += tableHTML;
     });
+
+    knockOutDiv.classList.remove("hide");
   }
 
   renderRoundName(payload: CurrentRoundType) {
@@ -267,6 +343,17 @@ export default class Renders {
 					<span class="result-score">${result.sc[0]} - ${result.sc[1]}</span>
 					<span class="result-team-name result-team-b">${result.t2}</span></div>`;
 
+          if (result.et && Array.isArray(result.et) && result.et.length > 0) {
+            const extraInfoDiv = document.createElement("div");
+            extraInfoDiv.className = "extra-info";
+            let extraText = `Extra Time: ${result.et[0]}-${result.et[1]}`;
+            if (result.pt && Array.isArray(result.pt) && result.pt.length > 0) {
+              extraText += `<br>Pens: ${result.pt[0]}-${result.pt[1]}`;
+            }
+            extraInfoDiv.innerHTML = extraText;
+            resultItem.appendChild(extraInfoDiv);
+          }
+
           resultsListEl.appendChild(resultItem);
           setTimeout(() => resultItem.classList.add("visible"), 50);
           if (index === results.length - 1) resolve();
@@ -279,6 +366,8 @@ export default class Renders {
     payload: CurrentRoundType,
     tournamentName: string
   ): Promise<void> {
+    if (!payload) return;
+
     const transitionScreenEl = document.querySelector("#transition-screen");
     const resultsScreenEl = document.querySelector("#results-screen");
 

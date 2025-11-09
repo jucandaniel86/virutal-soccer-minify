@@ -187,7 +187,7 @@ export default class WSCore {
     return false;
   }
 
-  bet(bets: BetItemType[]): void {
+  bet(bets: BetItemType[], betType: number): void {
     if (!bets || bets.length === 0) return;
 
     this.lastAction = RGS_ACTIONS.GAME;
@@ -196,6 +196,7 @@ export default class WSCore {
       publicState: {
         action: "BET",
         payload: {
+          isCombinedBet: betType === 2 ? true : false,
           bets,
         },
       },

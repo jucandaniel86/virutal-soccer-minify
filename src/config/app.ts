@@ -57,12 +57,26 @@ export type RoundMatchesType = {
   t2: string;
   sc?: number[];
   ot?: string;
+  pt?: number[];
+  et?: number[];
 };
 
 export type KnockoutRound = {
   index: number;
   name: string;
-  matches: RoundMatchesType[];
+  isTwoLegged: boolean;
+  gridData: {
+    headers: string[];
+    rows: any[];
+  };
+};
+
+export type PlayoffItemType = {
+  et: number[];
+  scleg1: number[];
+  scleg2: number[];
+  t1: string;
+  t2: string;
 };
 
 export type TournamentType = {
@@ -71,11 +85,19 @@ export type TournamentType = {
   knockout: {
     rounds: KnockoutRound[];
   };
+  playoff: {
+    items: PlayoffItemType[];
+  };
 };
+
+export enum RoundTypesE {
+  LEAGUE = "league",
+  KNOCKOUT = "knockout",
+}
 
 export type CurrentRoundType = {
   name: string;
-  roundType: string;
+  roundType: RoundTypesE;
   matches: RoundMatchesType[];
 };
 
@@ -85,6 +107,14 @@ export type PublicViewType = {
   secsToExtr: number;
   currentRound: CurrentRoundType;
   previousRound: CurrentRoundType;
+  canPlaceOutrightBets: boolean;
+};
+
+export type RoundBetsPlayer = {
+  betBoost: number;
+  id: number;
+  matchOutcomes: any[];
+  stake: number;
 };
 
 export type PlayerViewType = {
@@ -94,6 +124,7 @@ export type PlayerViewType = {
   returned: number;
   staked: number;
   totalWin: number;
+  roundBets?: RoundBetsPlayer[];
 };
 
 export type BetItemType = {

@@ -6,11 +6,13 @@ type BetItemType = {
 
 interface BetOptionsInterface {
   onBetChange: (_payload: BetItemType[]) => void;
+  onBetTypeChange: (_payload: number) => void;
 }
 
 export default class BetOptions {
   bets: BetItemType[] = [];
   onBetChange = (_payload: BetItemType[]) => {};
+  onBetTypeChange = (_payload: number) => {};
 
   //html buttons
   betSingleBtn: HTMLButtonElement = null;
@@ -22,6 +24,8 @@ export default class BetOptions {
   maxWin: HTMLElement = null;
   stakeInput: HTMLElement = null;
   betsCounter: HTMLElement = null;
+
+  betType: number = 0;
 
   //accuulator types
   accumulator = [
@@ -43,16 +47,47 @@ export default class BetOptions {
     this.stakeInput = document.querySelector(".stake-input");
     this.betsCounter = document.querySelector("#bets-counter");
     this.betBtn = document.querySelector("#bet-button");
+
+    //handle events
+    this.betSingleBtn.addEventListener("click", () => {
+      this.selectBetType(1);
+    });
+    this.betAccumulatorBtn.addEventListener("click", () => {
+      this.selectBetType(2);
+    });
   }
 
-  init({ onBetChange }: BetOptionsInterface) {
+  init({ onBetChange, onBetTypeChange }: BetOptionsInterface) {
     this.onBetChange = onBetChange;
+    this.onBetTypeChange = onBetTypeChange;
 
     const Buttons = Array.from(document.querySelectorAll(".odds-selector"));
     Buttons.forEach((button) => {
       button.removeEventListener("click", this.handleBetSelect.bind(this));
       button.addEventListener("click", this.handleBetSelect.bind(this));
     });
+  }
+
+  selectBetType(betType: number) {
+    this.betType = betType;
+    this.updateCalculations();
+
+    switch (betType) {
+      case 1:
+        {
+          this.betAccumulatorBtn.classList.remove("active");
+          this.betSingleBtn.classList.add("active");
+        }
+        break;
+      case 2:
+        {
+          this.betAccumulatorBtn.classList.add("active");
+          this.betSingleBtn.classList.remove("active");
+        }
+        break;
+    }
+
+    this.onBetTypeChange(betType);
   }
 
   private handleButtons() {
@@ -69,15 +104,12 @@ export default class BetOptions {
       this.betAccumulatorBtn.textContent = "Accumulator";
     }
     if (this.bets.length === 1) {
-      this.betSingleBtn.classList.add("active");
-
-      this.betAccumulatorBtn.classList.remove("active");
+      this.selectBetType(1);
       this.betAccumulatorBtn.textContent = "Accumulator";
       return;
     }
     if (this.bets.length > 1) {
-      this.betSingleBtn.classList.remove("active");
-      this.betAccumulatorBtn.classList.add("active");
+      this.selectBetType(2);
       const currentAccumulator = this.accumulator.find(
         (acc: any) => acc.counter === this.bets.length
       );
@@ -86,6 +118,9 @@ export default class BetOptions {
         this.betAccumulatorBtn.textContent = currentAccumulator.label;
       }
     }
+
+    this.betSingleBtn.disabled = false;
+    this.betAccumulatorBtn.disabled = false;
   }
 
   private resetOddsButtons() {
@@ -138,16 +173,29 @@ export default class BetOptions {
       if (this.betsCounter) this.betsCounter.textContent = "0";
       return;
     }
-    //@ts-ignore
-    this.totalOutlay.textContent = (stake * selectionCount).toFixed(2);
-    const productOfOdds = this.bets.reduce(
-      (product, selection) => product * selection.odds,
-      1
-    );
-    //@ts-ignore
-    maxWin = productOfOdds * stake;
 
+    let outlay = this.betType === 1 ? Number(stake) * selectionCount : stake;
+
+    if (this.betType === 1) {
+      const productOfOdds = this.bets.reduce(
+        (sum, selection) => sum + selection.odds * Number(stake),
+        0
+      );
+      maxWin = productOfOdds;
+    } else {
+      if (this.bets.length > 0) {
+        const productOfOdds = this.bets.reduce(
+          (product, selection) => product * selection.odds,
+          1
+        );
+        maxWin = productOfOdds * Number(stake);
+      }
+    }
+
+    //@ts-ignore
+    this.totalOutlay.textContent = outlay;
     this.maxWin.textContent = maxWin.toFixed(2);
+
     if (this.betsCounter) {
       this.betsCounter.textContent = String(this.bets.length);
     }

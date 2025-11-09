@@ -1,3 +1,5 @@
+import { PlayerViewType } from "../config/app";
+
 export default class ModalCore {
   private hiddenClass = "hide";
 
@@ -26,11 +28,22 @@ export default class ModalCore {
   /**
    * @returns {void}
    */
-  showBetModal(): Promise<void> {
+  showBetModal(playerview: PlayerViewType): Promise<void> {
     const betModal: HTMLDivElement = document.querySelector("#bet-modal");
     const betModalClose = document.querySelector(".modal-close-btn");
+    let message = "Bet Placed Successfully";
+    if (playerview.roundBets && Array.isArray(playerview.roundBets)) {
+      const currentBet = playerview.roundBets[0];
+      const betBoost = currentBet.betBoost;
+      const calcBetBoost = (betBoost - 1) * 100;
+      if (calcBetBoost > 0) {
+        message = `Bet ${currentBet.id} has been ODDS BOOSTED by ${Number(
+          calcBetBoost
+        ).toFixed(2)}%`;
+      }
+    }
 
-    this.showModal(betModal, "Bet Placed Successfully");
+    this.showModal(betModal, message);
 
     return new Promise((resolve) => {
       if (betModalClose) {
