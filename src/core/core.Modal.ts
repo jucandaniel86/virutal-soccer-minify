@@ -18,6 +18,18 @@ export default class ModalCore {
 
   /**
    *
+   * @param message
+   * @returns
+   */
+  showErrorModal(message: string) {
+    const modalEl: HTMLDivElement = document.querySelector("#error");
+    if (!modalEl) return;
+
+    this.showModal(modalEl, message);
+  }
+
+  /**
+   *
    * @param modalEl
    * @returns {void}
    */
@@ -32,8 +44,13 @@ export default class ModalCore {
     const betModal: HTMLDivElement = document.querySelector("#bet-modal");
     const betModalClose = document.querySelector(".modal-close-btn");
     let message = "Bet Placed Successfully";
-    if (playerview.roundBets && Array.isArray(playerview.roundBets)) {
-      const currentBet = playerview.roundBets[0];
+    if (
+      playerview.roundBets &&
+      Array.isArray(playerview.roundBets) &&
+      playerview.roundBets.length > 0
+    ) {
+      const maxID = Math.max(...playerview.roundBets.map((el) => el.id));
+      const currentBet = playerview.roundBets.find((el) => el.id === maxID);
       const betBoost = currentBet.betBoost;
       const calcBetBoost = (betBoost - 1) * 100;
       if (calcBetBoost > 0) {
@@ -41,6 +58,14 @@ export default class ModalCore {
           calcBetBoost
         ).toFixed(2)}%`;
       }
+    }
+
+    if (
+      playerview.outrightBets &&
+      Array.isArray(playerview.outrightBets) &&
+      playerview.outrightBets.length
+    ) {
+      message = "Outright Bet Placed Successfully";
     }
 
     this.showModal(betModal, message);

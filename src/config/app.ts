@@ -101,6 +101,15 @@ export type CurrentRoundType = {
   matches: RoundMatchesType[];
 };
 
+export type OutrightTeamType = {
+  team: string;
+  odds: number;
+};
+
+export type OutrightBettingType = {
+  teamOdds: OutrightTeamType[];
+};
+
 export type PublicViewType = {
   lobbyInfo: RoomDataType;
   tournament: TournamentType;
@@ -108,6 +117,7 @@ export type PublicViewType = {
   currentRound: CurrentRoundType;
   previousRound: CurrentRoundType;
   canPlaceOutrightBets: boolean;
+  outrightBetting?: OutrightBettingType;
 };
 
 export type RoundBetsPlayer = {
@@ -115,6 +125,13 @@ export type RoundBetsPlayer = {
   id: number;
   matchOutcomes: any[];
   stake: number;
+};
+
+export type PlayerOutrightBetType = {
+  id: number;
+  odds: number;
+  stake: number;
+  team: string;
 };
 
 export type PlayerViewType = {
@@ -125,6 +142,7 @@ export type PlayerViewType = {
   staked: number;
   totalWin: number;
   roundBets?: RoundBetsPlayer[];
+  outrightBets?: PlayerOutrightBetType[];
 };
 
 export type BetItemType = {

@@ -1,4 +1,9 @@
-import { APP_LOG, BetItemType, RGS_ACTIONS } from "../config/app";
+import {
+  APP_LOG,
+  BetItemType,
+  OutrightTeamType,
+  RGS_ACTIONS,
+} from "../config/app";
 
 interface WSCoreInterface {
   onResponse: (_payload: any) => void;
@@ -185,6 +190,23 @@ export default class WSCore {
       this.resetHeartbeat();
     }
     return false;
+  }
+
+  outrightBet(payload: OutrightTeamType, stake: number) {
+    if (!payload) return;
+    this.lastAction = RGS_ACTIONS.GAME;
+    this.send({
+      requestType: RGS_ACTIONS.GAME,
+      publicState: {
+        action: "BET",
+        payload: {
+          outrightBet: {
+            team: payload.team,
+            stake,
+          },
+        },
+      },
+    });
   }
 
   bet(bets: BetItemType[], betType: number): void {

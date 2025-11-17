@@ -1,3 +1,5 @@
+import { OutrightTeamType } from "../config/app";
+
 type BetItemType = {
   matchId: string;
   outcome: string;
@@ -162,7 +164,14 @@ export default class BetOptions {
     this.updateCalculations();
   }
 
-  public updateCalculations() {
+  public setOutrightBet(payload: any) {
+    this.resetBets();
+    this.bets.push(payload);
+    this.handleButtons();
+    this.updateCalculations(payload);
+  }
+
+  public updateCalculations(outrightBetting?: OutrightTeamType) {
     const selectionCount = this.bets.length;
     const stake = this.stakeInput.dataset.stake;
     let maxWin = 0;
@@ -174,9 +183,16 @@ export default class BetOptions {
       return;
     }
 
-    let outlay = this.betType === 1 ? Number(stake) * selectionCount : stake;
+    let outlay =
+      this.betType === 1 && !outrightBetting
+        ? Number(stake) * selectionCount
+        : stake;
 
-    if (this.betType === 1) {
+    if (outrightBetting) {
+      outlay = stake;
+    }
+
+    if (this.betType === 1 || outrightBetting) {
       const productOfOdds = this.bets.reduce(
         (sum, selection) => sum + selection.odds * Number(stake),
         0

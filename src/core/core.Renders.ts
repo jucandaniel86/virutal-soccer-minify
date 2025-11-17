@@ -3,6 +3,7 @@ import {
   CurrentRoundType,
   KnockoutRound,
   LegueData,
+  OutrightBettingType,
   PlayerViewType,
   PlayoffItemType,
   RoomTypesType,
@@ -159,6 +160,38 @@ export default class Renders {
     }
   }
 
+  renderOutrightBetting(
+    outrightData: OutrightBettingType,
+    onRenderReady?: any
+  ) {
+    const outRightScreen = document.querySelector("#outright-screen");
+    const outrightContent = document.querySelector("#outright-content");
+
+    if (!outrightData) {
+      outrightContent.innerHTML = "";
+      outRightScreen.classList.add("hide");
+      return;
+    }
+
+    if (!outRightScreen || !outrightContent) return;
+
+    outRightScreen.classList.remove("hide");
+
+    outrightContent.innerHTML = "";
+    outrightData.teamOdds.forEach((selection) => {
+      const btn = document.createElement("button");
+      btn.className = "outright-bet-btn";
+      btn.textContent = `${selection.team} - ${selection.odds}`;
+      btn.dataset.team = selection.team;
+      btn.dataset.odds = String(selection.odds);
+      outrightContent.appendChild(btn);
+    });
+
+    if (typeof onRenderReady === "function") {
+      onRenderReady();
+    }
+  }
+
   renderKnockoutRounds(payload: TournamentType) {
     const knockOutDiv = document.querySelector("#knockout-results-display");
     const leagueTable = document.querySelector(".legue-table");
@@ -168,6 +201,8 @@ export default class Renders {
     if (leagueTable) {
       leagueTable.classList.add("hide");
     }
+
+    if (!payload.knockout) return;
 
     knockOutDiv.innerHTML = "";
     payload.knockout.rounds.forEach((round) => {

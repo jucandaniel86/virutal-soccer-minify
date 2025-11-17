@@ -7,6 +7,7 @@ import {
   PlayerViewType,
   CreditType,
   RoundTypesE,
+  OutrightTeamType,
 } from "../config/app";
 import BetOptions from "./core.BetOptions";
 import ModalCore from "./core.Modal";
@@ -31,6 +32,7 @@ export let __CurrentStake = 0;
 export let __CurrentBets: any[] = [];
 export let __BetType = 0;
 export let __ChampionshipEnded = false;
+export let __SelectedOutrightTeam: OutrightTeamType | null = null;
 
 const displayError = (message: string) => {
   const ErrorModalWrapper = document.querySelector("#error");
@@ -66,6 +68,33 @@ const handleReloadButton = () => {
     e.preventDefault();
     window.location.reload();
   });
+};
+
+const handleOutrightBets = () => {
+  const outrightContent = document.querySelector("#outright-content");
+  if (!outrightContent) return;
+
+  const handleClickOutrightButton = (event: any) => {
+    //@ts-ignore
+    const clickedButton = event.target.closest(".outright-bet-btn");
+    console.log("clicked Button", clickedButton);
+
+    if (!clickedButton) return;
+    document
+      .querySelectorAll(".outright-bet-btn")
+      .forEach((button) => button.classList.remove("selected"));
+
+    __SelectedOutrightTeam = {
+      team: clickedButton.dataset.team,
+      odds: clickedButton.dataset.odds,
+    };
+    clickedButton.classList.add("selected");
+
+    __BetOptions.setOutrightBet(__SelectedOutrightTeam);
+  };
+
+  outrightContent.removeEventListener("click", handleClickOutrightButton);
+  outrightContent.addEventListener("click", handleClickOutrightButton);
 };
 
 export const startGame = async (state: APP_STATE) => {
@@ -164,17 +193,23 @@ export const onResponse = (response: any) => {
         onBetTypeChange: setCurrentBetType,
       });
       __Renders.renderRoundName(__PublicView.currentRound);
+      __Renders.renderOutrightBetting(
+        __PublicView.outrightBetting,
+        handleOutrightBets
+      );
       break;
     case RGS_ACTIONS.GAME:
       __PlayerView = response.playerView;
-      console.log("PLAYER_VIEW", __PlayerView);
 
       if (typeof response.playerView.error !== "undefined") {
-        return __Modal.showModal(response.playerView.error.message);
+        return __Modal.showErrorModal(
+          response.playerView.error.message || "Unknow error"
+        );
       }
 
       __Modal.showBetModal(__PlayerView).then(() => {
         __BetOptions.resetBets();
+        __SelectedOutrightTeam = null;
       });
 
       break;
@@ -200,6 +235,10 @@ export const onBroadcastResponse = (response: any) => {
   __Renders.renderCountdownTimer(__PublicView.secsToExtr);
   __Renders.renderRoundName(__PublicView.currentRound);
   __Renders.renderPlayerView(__PlayerView, __Credit);
+  __Renders.renderOutrightBetting(
+    __PublicView.outrightBetting,
+    handleOutrightBets
+  );
 
   if (!__PublicView.tournament.isEnded) {
     __Renders.resetKnockoutResults();
@@ -236,6 +275,15 @@ const handleStakeChange = (_stake: any) => {
 
 const handlePlaceBet = async () => {
   if (!__CurrentBets || __CurrentBets.length === 0 || !__CurrentStake) return;
+
+  if (__SelectedOutrightTeam) {
+    __Websocket.outrightBet(
+      __SelectedOutrightTeam,
+      parseFloat(Number(__CurrentStake).toFixed(2))
+    );
+
+    return;
+  }
 
   const CurrentBets = __CurrentBets.map((bet: any) => ({
     matchId: bet.matchId,
