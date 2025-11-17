@@ -155,3 +155,12 @@ export type CreditType = {
   amount: number;
   currency: string;
 };
+
+export type ErrorType = {
+  errorCode: string | number;
+  errorMessage: string;
+  errorObject?: { operatorCode: number; operatorMessage: string };
+  errorType: string;
+};
+
+export const LOG_PROXI = true;

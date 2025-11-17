@@ -1,13 +1,14 @@
 import {
   APP_LOG,
   BetItemType,
+  ErrorType,
   OutrightTeamType,
   RGS_ACTIONS,
 } from "../config/app";
 
 interface WSCoreInterface {
   onResponse: (_payload: any) => void;
-  onError: (message: string) => void;
+  onError: (payload: ErrorType) => void;
   onReady: (_payload?: any) => void;
   onBroadcastResponse: (_payload: any) => void;
 }
@@ -24,7 +25,7 @@ export default class WSCore {
   heartbeatHandle: any = null;
   onResponse: (_payload: any) => void;
   onBroadcastResponse: (_payload: any) => void;
-  onError: (message: any) => void;
+  onError: (payload: ErrorType) => void;
   onReady: (_payload?: string) => void;
 
   constructor({
@@ -45,7 +46,11 @@ export default class WSCore {
 
   init() {
     if (!this.validateParams()) {
-      this.triggerErrorModal("Invalid Game Params");
+      this.triggerErrorModal({
+        errorCode: 9999,
+        errorMessage: "Invalid Game Params",
+        errorType: "crytical",
+      });
       return false;
     }
 
@@ -61,7 +66,11 @@ export default class WSCore {
   }
 
   onSocketError(err: any) {
-    this.triggerErrorModal("Websocket Error");
+    this.triggerErrorModal({
+      errorCode: 9999,
+      errorMessage: "Websocket Error",
+      errorType: "critical",
+    });
     this.log("[error]");
     this.connected = false;
   }
@@ -81,7 +90,11 @@ export default class WSCore {
     } else {
       this.log("[close] Connection closed");
     }
-    this.triggerErrorModal("[close] Connection closed");
+    this.triggerErrorModal({
+      errorCode: 9999,
+      errorMessage: "[close] Connection closed",
+      errorType: "critical",
+    });
   }
 
   send(_payload: any) {
@@ -111,7 +124,7 @@ export default class WSCore {
     }
 
     if (_wsResponse.error) {
-      this.triggerErrorModal(_wsResponse.error.errorMessage);
+      this.triggerErrorModal(_wsResponse.error);
       return;
     }
 
@@ -150,7 +163,7 @@ export default class WSCore {
     return true;
   }
 
-  triggerErrorModal(message: string) {
+  triggerErrorModal(message: ErrorType) {
     this.onError(message);
   }
 

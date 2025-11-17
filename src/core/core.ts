@@ -8,9 +8,11 @@ import {
   CreditType,
   RoundTypesE,
   OutrightTeamType,
+  ErrorType,
 } from "../config/app";
 import BetOptions from "./core.BetOptions";
 import ModalCore from "./core.Modal";
+import ProxiCore from "./core.Proxi";
 import Renders from "./core.Renders";
 import StakeSelector from "./core.StakeSelector";
 import { animateStar, isset } from "./core.Utils";
@@ -26,6 +28,7 @@ export let __Renders: Renders = null;
 export let __BetOptions: BetOptions;
 export let __Modal: ModalCore;
 export let __Credit: CreditType = null;
+export let __Proxi: ProxiCore;
 
 //Game Vars
 export let __CurrentStake = 0;
@@ -33,11 +36,14 @@ export let __CurrentBets: any[] = [];
 export let __BetType = 0;
 export let __ChampionshipEnded = false;
 export let __SelectedOutrightTeam: OutrightTeamType | null = null;
+export let __CurrentRound = "";
 
-const displayError = (message: string) => {
+const displayError = (error: ErrorType) => {
   const ErrorModalWrapper = document.querySelector("#error");
   ErrorModalWrapper.classList.remove("hide");
-  ErrorModalWrapper.querySelector("p").innerHTML = message;
+  ErrorModalWrapper.querySelector("p").innerHTML = error.errorMessage;
+
+  __Proxi.error(error.errorCode, error.errorMessage, error.errorType);
 };
 
 const setCurrentBetType = (_betType: number) => {
@@ -97,6 +103,12 @@ const handleOutrightBets = () => {
   outrightContent.addEventListener("click", handleClickOutrightButton);
 };
 
+export const initHTMLEvents = () => {
+  window.addEventListener("beforeunload", (event) => {
+    __Proxi.exitGame();
+  });
+};
+
 export const startGame = async (state: APP_STATE) => {
   //screens
   const LoadingScreen = document.querySelector("#LoadingScreen");
@@ -119,7 +131,11 @@ export const startGame = async (state: APP_STATE) => {
       break;
     case APP_STATE.JOIN:
       if (!__CurrentRoom) {
-        return displayError("Invalid Room.");
+        return displayError({
+          errorCode: 9999,
+          errorMessage: "Invalid Room.",
+          errorType: "critical",
+        });
       }
       __Websocket.join(__CurrentRoom.id);
       break;
@@ -173,6 +189,8 @@ export const onResponse = (response: any) => {
         ? __PublicView.previousRound
         : __PublicView.currentRound;
 
+      __CurrentRound = cRound.name;
+
       if (cRound) {
         switch (cRound.roundType) {
           case RoundTypesE.LEAGUE:
@@ -197,11 +215,22 @@ export const onResponse = (response: any) => {
         __PublicView.outrightBetting,
         handleOutrightBets
       );
+
+      __Proxi.gameReady({});
+      __Proxi.gameStarted(__PublicView.currentRound.name);
+      __Proxi.updateBalance(__Credit.amount, __Credit.currency);
       break;
     case RGS_ACTIONS.GAME:
       __PlayerView = response.playerView;
 
       if (typeof response.playerView.error !== "undefined") {
+        if (response.playerView.error.errorObject) {
+        }
+        __Proxi.error(
+          response.playerView.error.errorCode,
+          response.playerView.error.errorMessage,
+          response.playerView.error.errorType
+        );
         return __Modal.showErrorModal(
           response.playerView.error.message || "Unknow error"
         );
@@ -220,9 +249,24 @@ export const onBroadcastResponse = (response: any) => {
   __PublicView = response.publicView;
   __PlayerView = response.playerView;
 
+  if (response.credit) {
+    __Credit = response.credit;
+  }
+
   const cRound: any = __PublicView.previousRound
     ? __PublicView.currentRound
     : __PublicView.previousRound;
+
+  if (cRound.name !== __CurrentRound && __PlayerView) {
+    __Proxi.gameCompleted(
+      __CurrentRound,
+      __PlayerView.totalWin,
+      __PlayerView.profit,
+      __Credit.currency
+    );
+    __Proxi.updateBalance(__Credit.amount, __Credit.currency);
+  }
+  __CurrentRound = cRound.name;
 
   //call renders
   if (!__ChampionshipEnded) {
@@ -232,6 +276,7 @@ export const onBroadcastResponse = (response: any) => {
     );
   }
 
+  __Proxi.gameStarted(__PublicView.currentRound.name);
   __Renders.renderCountdownTimer(__PublicView.secsToExtr);
   __Renders.renderRoundName(__PublicView.currentRound);
   __Renders.renderPlayerView(__PlayerView, __Credit);
@@ -281,7 +326,6 @@ const handlePlaceBet = async () => {
       __SelectedOutrightTeam,
       parseFloat(Number(__CurrentStake).toFixed(2))
     );
-
     return;
   }
 
@@ -307,6 +351,9 @@ export const __init = () => {
     onResponse,
   });
   __Modal = new ModalCore();
+  __Proxi = new ProxiCore();
+
+  __Proxi.listening();
 
   //handle place bets
   document
@@ -330,5 +377,6 @@ export const __init = () => {
   setGameTitle();
   setGameHeight();
   handleReloadButton();
+  initHTMLEvents();
   startGame(APP_STATE.INIT);
 };
