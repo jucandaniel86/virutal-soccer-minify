@@ -346,9 +346,10 @@ export default class Renders {
   }
 
   renderBalance(payload: any) {
+    const { decimalPrecision = 2 } = payload;
     const formatedBalance = `
     ${payload.currency}
-    ${parseFloat(payload.amount).toFixed(payload.decimalPrecision)}`;
+    ${parseFloat(payload.amount).toFixed(decimalPrecision)}`;
     const balanceEl = document.querySelector("#balance");
     if (!balanceEl) return;
 

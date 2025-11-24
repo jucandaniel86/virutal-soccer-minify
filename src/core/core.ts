@@ -83,7 +83,6 @@ const handleOutrightBets = () => {
   const handleClickOutrightButton = (event: any) => {
     //@ts-ignore
     const clickedButton = event.target.closest(".outright-bet-btn");
-    console.log("clicked Button", clickedButton);
 
     if (!clickedButton) return;
     document
@@ -160,6 +159,9 @@ const handleBetsChange = (payload: any) => (__CurrentBets = payload);
  * @param response
  */
 export const onResponse = (response: any) => {
+  if (response.credit) {
+    __Credit = response.credit;
+  }
   switch (response.requestType) {
     case RGS_ACTIONS.LOGIN:
       __StakeSelector.init(response);
@@ -185,9 +187,10 @@ export const onResponse = (response: any) => {
         __Renders.renderKnockoutResults(__PublicView.tournament);
       }
 
-      const cRound = __PublicView.previousRound
-        ? __PublicView.previousRound
-        : __PublicView.currentRound;
+      const cRound =
+        typeof __PublicView.previousRound !== "undefined"
+          ? __PublicView.previousRound
+          : __PublicView.currentRound;
 
       __CurrentRound = cRound.name;
 
@@ -219,6 +222,7 @@ export const onResponse = (response: any) => {
       __Proxi.gameReady({});
       __Proxi.gameStarted(__PublicView.currentRound.name);
       __Proxi.updateBalance(__Credit.amount, __Credit.currency);
+      __Renders.renderBalance(__Credit);
       break;
     case RGS_ACTIONS.GAME:
       __PlayerView = response.playerView;
@@ -240,7 +244,7 @@ export const onResponse = (response: any) => {
         __BetOptions.resetBets();
         __SelectedOutrightTeam = null;
       });
-
+      __Renders.renderBalance(__Credit);
       break;
   }
 };
@@ -253,9 +257,10 @@ export const onBroadcastResponse = (response: any) => {
     __Credit = response.credit;
   }
 
-  const cRound: any = __PublicView.previousRound
-    ? __PublicView.currentRound
-    : __PublicView.previousRound;
+  const cRound: any =
+    typeof __PublicView.previousRound === "undefined"
+      ? __PublicView.currentRound
+      : __PublicView.previousRound;
 
   if (cRound.name !== __CurrentRound && __PlayerView) {
     __Proxi.gameCompleted(
@@ -271,7 +276,9 @@ export const onBroadcastResponse = (response: any) => {
   //call renders
   if (!__ChampionshipEnded) {
     __Renders.renderMatchResults(
-      __PublicView.previousRound,
+      __PublicView.tournament.isEnded
+        ? __PublicView.currentRound
+        : __PublicView.previousRound,
       __CurrentRoom.name
     );
   }
@@ -284,6 +291,7 @@ export const onBroadcastResponse = (response: any) => {
     __PublicView.outrightBetting,
     handleOutrightBets
   );
+  __Renders.renderBalance(__Credit);
 
   if (!__PublicView.tournament.isEnded) {
     __Renders.resetKnockoutResults();
