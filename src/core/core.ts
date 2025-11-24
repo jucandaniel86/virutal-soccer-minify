@@ -370,17 +370,17 @@ export const __init = () => {
 
   //handle user history
   const matchInfoBar = document.querySelector(".match-info-bar");
-  const betHistoryModal = document.querySelector("#bet-history-modal");
-  const betHistoryCloseBtn = document.getElementById("bet-history-close-btn");
+  // const betHistoryModal = document.querySelector("#bet-history-modal");
+  // const betHistoryCloseBtn = document.getElementById("bet-history-close-btn");
 
   if (matchInfoBar)
-    matchInfoBar.addEventListener("click", () => __Modal.showBetHistory());
+    matchInfoBar.addEventListener("click", () => __Proxi.goToExternalHistory());
   //@ts-ignore
-  if (betHistoryCloseBtn)
-    betHistoryCloseBtn.addEventListener("click", () =>
-      //@ts-ignore
-      __Modal.hideModal(betHistoryModal)
-    );
+  // if (betHistoryCloseBtn)
+  //   betHistoryCloseBtn.addEventListener("click", () =>
+  //     //@ts-ignore
+  //     __Modal.hideModal(betHistoryModal)
+  //   );
 
   setGameTitle();
   setGameHeight();

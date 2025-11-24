@@ -1,4 +1,5 @@
 import { APP_LOG, LOG_PROXI } from "../config/app";
+import { getQueryParams } from "./core.Utils";
 
 export enum ProxiEventTypes {
   LISTENING = "LISTENING",
@@ -136,5 +137,17 @@ export default class ProxiCore {
     );
     console.log(message);
     console.groupEnd();
+  }
+
+  public goToExternalHistory(): void {
+    const queryParams: any = getQueryParams();
+
+    const historyUrl: any = new URL(queryParams.historyURL);
+
+    historyUrl.searchParams.append("siteID", queryParams.siteID as string);
+    historyUrl.searchParams.append("gameID", queryParams.gameID as string);
+    historyUrl.searchParams.append("fixedID", queryParams.playToken as string);
+    //@ts-ignore
+    window.open(historyUrl, "_blank").focus();
   }
 }
