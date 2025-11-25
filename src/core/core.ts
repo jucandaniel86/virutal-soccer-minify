@@ -326,6 +326,10 @@ const handleStakeChange = (_stake: any) => {
   __CurrentStake = _stake;
 };
 
+const setAppName = () => {
+  const appHeader = document.querySelector("#app-game-name");
+};
+
 const handlePlaceBet = async () => {
   if (!__CurrentBets || __CurrentBets.length === 0 || !__CurrentStake) return;
 
@@ -369,18 +373,23 @@ export const __init = () => {
     .addEventListener("click", handlePlaceBet);
 
   //handle user history
-  const matchInfoBar = document.querySelector(".match-info-bar");
-  // const betHistoryModal = document.querySelector("#bet-history-modal");
-  // const betHistoryCloseBtn = document.getElementById("bet-history-close-btn");
+  const menuBtn = document.querySelector("#app-menu");
+  const betHistoryModal = document.querySelector("#bet-history-modal");
+  const betHistoryCloseBtn = document.getElementById("bet-history-close-btn");
+  const historyBtn = document.querySelector("#app-history-btn");
 
-  if (matchInfoBar)
-    matchInfoBar.addEventListener("click", () => __Proxi.goToExternalHistory());
+  if (historyBtn) {
+    historyBtn.addEventListener("click", () => __Proxi.goToExternalHistory());
+  }
+
+  if (menuBtn)
+    menuBtn.addEventListener("click", () => __Modal.showBetHistory());
   //@ts-ignore
-  // if (betHistoryCloseBtn)
-  //   betHistoryCloseBtn.addEventListener("click", () =>
-  //     //@ts-ignore
-  //     __Modal.hideModal(betHistoryModal)
-  //   );
+  if (betHistoryCloseBtn)
+    betHistoryCloseBtn.addEventListener("click", () =>
+      //@ts-ignore
+      __Modal.hideModal(betHistoryModal)
+    );
 
   setGameTitle();
   setGameHeight();
