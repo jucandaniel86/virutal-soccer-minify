@@ -239,10 +239,11 @@ export const onResponse = (response: any) => {
           response.playerView.error.message || "Unknow error"
         );
       }
-
+      const betBtn: HTMLButtonElement = document.querySelector("#bet-button");
       __Modal.showBetModal(__PlayerView).then(() => {
         __BetOptions.resetBets();
         __SelectedOutrightTeam = null;
+        betBtn.disabled = false;
       });
       __Renders.renderBalance(__Credit);
       break;
@@ -326,10 +327,6 @@ const handleStakeChange = (_stake: any) => {
   __CurrentStake = _stake;
 };
 
-const setAppName = () => {
-  const appHeader = document.querySelector("#app-game-name");
-};
-
 const handlePlaceBet = async () => {
   if (!__CurrentBets || __CurrentBets.length === 0 || !__CurrentStake) return;
 
@@ -340,6 +337,7 @@ const handlePlaceBet = async () => {
     );
     return;
   }
+  const betBtn: HTMLButtonElement = document.querySelector("#bet-button");
 
   const CurrentBets = __CurrentBets.map((bet: any) => ({
     matchId: bet.matchId,
@@ -347,6 +345,11 @@ const handlePlaceBet = async () => {
     stake: parseFloat(Number(__CurrentStake).toFixed(2)),
   }));
   __Websocket.bet(CurrentBets, __BetType);
+
+  if (betBtn) {
+    betBtn.disabled = true;
+  }
+
   await animateStar();
 };
 
