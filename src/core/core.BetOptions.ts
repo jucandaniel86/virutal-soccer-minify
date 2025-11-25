@@ -179,7 +179,7 @@ export default class BetOptions {
     if (selectionCount === 0) {
       if (this.totalOutlay) this.totalOutlay.textContent = "0.00";
       if (this.maxWin) this.maxWin.textContent = "0.00";
-      if (this.betsCounter) this.betsCounter.textContent = "0";
+      // if (this.betsCounter) this.betsCounter.textContent = "0";
       return;
     }
 
@@ -213,7 +213,7 @@ export default class BetOptions {
     this.maxWin.textContent = maxWin.toFixed(2);
 
     if (this.betsCounter) {
-      this.betsCounter.textContent = String(this.bets.length);
+      // this.betsCounter.textContent = String(this.bets.length);
     }
   }
 

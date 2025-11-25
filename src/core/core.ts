@@ -187,6 +187,8 @@ export const onResponse = (response: any) => {
         __Renders.renderKnockoutResults(__PublicView.tournament);
       }
 
+      __Renders.renderTournamentNumber(__PublicView);
+
       const cRound =
         typeof __PublicView.previousRound !== "undefined"
           ? __PublicView.previousRound
@@ -207,6 +209,8 @@ export const onResponse = (response: any) => {
         }
       }
       __ChampionshipEnded = __PublicView.tournament.isEnded;
+
+      __Renders.renderBetsCounter(__PlayerView);
       __Renders.renderCountdownTimer(__PublicView.secsToExtr);
 
       __BetOptions.init({
@@ -226,6 +230,8 @@ export const onResponse = (response: any) => {
       break;
     case RGS_ACTIONS.GAME:
       __PlayerView = response.playerView;
+
+      __Renders.renderBetsCounter(__PlayerView);
 
       if (typeof response.playerView.error !== "undefined") {
         if (response.playerView.error.errorObject) {
@@ -285,6 +291,7 @@ export const onBroadcastResponse = (response: any) => {
   }
 
   __Proxi.gameStarted(__PublicView.currentRound.name);
+  __Renders.renderBetsCounter(__PlayerView);
   __Renders.renderCountdownTimer(__PublicView.secsToExtr);
   __Renders.renderRoundName(__PublicView.currentRound);
   __Renders.renderPlayerView(__PlayerView, __Credit);
@@ -374,6 +381,9 @@ export const __init = () => {
   document
     .querySelector(".bet-button")
     .addEventListener("click", handlePlaceBet);
+
+  //handle resize
+  window.addEventListener("resize", () => setGameHeight());
 
   //handle user history
   const menuBtn = document.querySelector("#app-menu");

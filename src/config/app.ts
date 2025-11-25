@@ -82,6 +82,7 @@ export type PlayoffItemType = {
 export type TournamentType = {
   league: LegueData;
   isEnded: boolean;
+  tournamentNo: number;
   knockout: {
     rounds: KnockoutRound[];
   };

@@ -6,6 +6,7 @@ import {
   OutrightBettingType,
   PlayerViewType,
   PlayoffItemType,
+  PublicViewType,
   RoomTypesType,
   TournamentType,
 } from "../config/app";
@@ -345,6 +346,13 @@ export default class Renders {
     }
   }
 
+  renderTournamentNumber(payload: PublicViewType) {
+    const HTMLDivElement = document.querySelector("#tournament-no");
+    if (!HTMLDivElement) return;
+
+    HTMLDivElement.innerHTML = String(payload.tournament.tournamentNo);
+  }
+
   renderBalance(payload: any) {
     const { decimalPrecision = 2 } = payload;
     const formatedBalance = `
@@ -451,8 +459,24 @@ export default class Renders {
                                 } <b>${playerView.returned.toFixed(2)}</b></div>
                                 <div>Profit: ${
                                   credit.currency
-                                } <b>${playerView.totalWin.toFixed(
-      2
-    )}</b></div>`;
+                                } <b>${playerView.profit.toFixed(2)}</b></div>`;
+  }
+
+  renderBetsCounter(playerView: PlayerViewType) {
+    const betTypes = document.querySelector("#bets-counter");
+
+    if (!betTypes) return;
+
+    if (!playerView) {
+      betTypes.innerHTML = `0`;
+      return;
+    }
+
+    if (typeof playerView.roundBets === "undefined") {
+      betTypes.innerHTML = `0`;
+      return;
+    }
+
+    betTypes.innerHTML = String(playerView.roundBets.length);
   }
 }

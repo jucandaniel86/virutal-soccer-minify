@@ -809,6 +809,7 @@ body {
   overflow-x: hidden;
   overflow-y: scroll;
   scrollbar-color: var(--base-color) #fff;
+  text-align: left;
 }
 
 #bet-history-modal {
