@@ -8,6 +8,7 @@ import {
   PlayoffItemType,
   PublicViewType,
   RoomTypesType,
+  RoundTypesE,
   TournamentType,
 } from "../config/app";
 
@@ -89,11 +90,20 @@ export default class Renders {
 
   renderCountdownTimer(seconds: number) {
     const countdownEl: HTMLSpanElement = document.querySelector("#countdown");
+    const betButton: HTMLButtonElement = document.querySelector(".bet-button");
+
     clearInterval(this.countdownInterval);
     let timeLeft = seconds || 0;
     if (countdownEl) countdownEl.textContent = String(timeLeft);
     this.countdownInterval = setInterval(() => {
       timeLeft--;
+
+      if (timeLeft < 2) {
+        if (betButton) {
+          betButton.disabled = true;
+        }
+      }
+
       if (timeLeft >= 0) {
         if (countdownEl) countdownEl.textContent = String(timeLeft);
       } else {
@@ -183,7 +193,6 @@ export default class Renders {
       outRightScreen.classList.add("hide");
       return;
     }
-    console.log("here ", betDetails);
     if (betDetails) {
       betDetails.classList.add("hide");
     }
@@ -440,8 +449,11 @@ export default class Renders {
     const transitionScreenEl = document.querySelector("#transition-screen");
     const resultsScreenEl = document.querySelector("#results-screen");
     const roundSummaryEl = document.querySelector("#round-summary");
+    const outrightSumaryEl = document.querySelector("#outright-summary");
 
     if (roundSummaryEl) roundSummaryEl.classList.add("hide");
+
+    if (outrightSumaryEl) outrightSumaryEl.classList.add("hide");
 
     if (transitionScreenEl) transitionScreenEl.classList.remove("hide");
 
@@ -461,29 +473,38 @@ export default class Renders {
 
   renderPlayerView(playerView: PlayerViewType, credit: CreditType) {
     const roundSummaryEl = document.querySelector("#round-summary");
-    const resultsList = document.querySelector("#results-list");
+    const outrightSumaryEl = document.querySelector("#outright-summary");
 
     if (!roundSummaryEl) return;
 
     if (!playerView) {
       roundSummaryEl.classList.add("hide");
       roundSummaryEl.innerHTML = "";
-      if (resultsList) {
-        //@ts-ignore
-        resultsList.style.height = "100%";
-      }
       return;
     }
 
-    if (resultsList) {
-      //@ts-ignore
-      resultsList.style.height = "calc(70% - 20px)";
-    }
+    //render round summary
     const profit = playerView.profit < 0 ? 0 : playerView.profit;
     roundSummaryEl.classList.remove("hide");
     roundSummaryEl.innerHTML = `<div>Staked: ${
       credit.currency
     } <b>${playerView.staked.toFixed(2)}</b></div>
+                                <div>Returns: ${
+                                  credit.currency
+                                } <b>${playerView.returned.toFixed(2)}</b></div>
+                                <div>Profit: ${
+                                  credit.currency
+                                } <b>${profit.toFixed(2)}</b></div>`;
+    return;
+
+    //render outright summary
+    outrightSumaryEl.innerHTML = "";
+    outrightSumaryEl.classList.remove("hide");
+    //@ts-ignore
+    outrightSumaryEl.style.bottom = `${roundSummaryEl.clientHeight}px`;
+    outrightSumaryEl.innerHTML = `
+		<h3 class="mt-0 mb-0">Outright Bet</h3>
+		<div>Staked: ${credit.currency} <b>${playerView.staked.toFixed(2)}</b></div>
                                 <div>Returns: ${
                                   credit.currency
                                 } <b>${playerView.returned.toFixed(2)}</b></div>
@@ -508,5 +529,23 @@ export default class Renders {
     }
 
     betTypes.innerHTML = String(playerView.roundBets.length);
+  }
+
+  /**
+   *
+   * @param cRound
+   * @param tournament
+   */
+  renderRoundTables(cRound: RoundTypesE, tournament: TournamentType) {
+    switch (cRound) {
+      case RoundTypesE.LEAGUE:
+        this.renderLeagueTable(tournament.league);
+        break;
+      case RoundTypesE.KNOCKOUT:
+        if (!tournament.isEnded) {
+          this.renderKnockoutRounds(tournament);
+        }
+        break;
+    }
   }
 }

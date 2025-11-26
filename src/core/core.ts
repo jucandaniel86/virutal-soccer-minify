@@ -106,6 +106,8 @@ export const initHTMLEvents = () => {
   window.addEventListener("beforeunload", (event) => {
     __Proxi.exitGame();
   });
+  //handle resize
+  window.addEventListener("resize", () => setGameHeight());
 };
 
 export const startGame = async (state: APP_STATE) => {
@@ -197,16 +199,7 @@ export const onResponse = (response: any) => {
       __CurrentRound = cRound.name;
 
       if (cRound) {
-        switch (cRound.roundType) {
-          case RoundTypesE.LEAGUE:
-            __Renders.renderLeagueTable(__PublicView.tournament.league);
-            break;
-          case RoundTypesE.KNOCKOUT:
-            if (!__PublicView.tournament.isEnded) {
-              __Renders.renderKnockoutRounds(__PublicView.tournament);
-            }
-            break;
-        }
+        __Renders.renderRoundTables(cRound.roundType, __PublicView.tournament);
       }
       __ChampionshipEnded = __PublicView.tournament.isEnded;
 
@@ -246,10 +239,7 @@ export const onResponse = (response: any) => {
         );
       }
       const betBtn: HTMLButtonElement = document.querySelector("#bet-button");
-      __Modal.showBetModal(__PlayerView).then(() => {
-        __BetOptions.resetBets();
-        __SelectedOutrightTeam = null;
-      });
+      __Modal.showBetModal(__PlayerView).then(() => {});
       __Renders.renderBalance(__Credit);
       break;
   }
@@ -319,16 +309,7 @@ export const onBroadcastResponse = (response: any) => {
   }
 
   if (cRound) {
-    switch (cRound.roundType) {
-      case RoundTypesE.LEAGUE:
-        __Renders.renderLeagueTable(__PublicView.tournament.league);
-        break;
-      case RoundTypesE.KNOCKOUT:
-        if (!__PublicView.tournament.isEnded) {
-          __Renders.renderKnockoutRounds(__PublicView.tournament);
-        }
-        break;
-    }
+    __Renders.renderRoundTables(cRound.roundType, __PublicView.tournament);
   }
 
   __BetOptions.init({
@@ -367,6 +348,9 @@ const handlePlaceBet = async () => {
     betBtn.disabled = true;
   }
 
+  __BetOptions.resetBets();
+  __SelectedOutrightTeam = null;
+
   await animateStar();
 };
 
@@ -391,9 +375,6 @@ export const __init = () => {
   document
     .querySelector(".bet-button")
     .addEventListener("click", handlePlaceBet);
-
-  //handle resize
-  window.addEventListener("resize", () => setGameHeight());
 
   //handle user history
   const menuBtn = document.querySelector("#app-menu");

@@ -638,8 +638,8 @@ body {
   transition: transform 0.75s ease-in-out;
 }
 
-.round-summary {
-  margin-top: 20px;
+.round-summary,
+.outright-summary {
   padding: 10px;
   border-top: 1px solid #ddd;
   font-size: 0.9em;
@@ -855,4 +855,12 @@ body {
   -moz-user-select: none; /* Old versions of Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none; /* Non-prefixed version, currently */
+}
+
+.mt-0 {
+  margin-top: 0 !important;
+}
+
+.mb-0 {
+  margin-bottom: 0 !important;
 }
