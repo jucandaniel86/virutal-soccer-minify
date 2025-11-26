@@ -69,9 +69,18 @@ export default class Renders {
     if (!outrightContent || !outrightData || !outrightData) return;
     outrightContent.innerHTML = "";
     outrightData.forEach((selection) => {
+      let teamName = document.createElement("span");
+      let odds = document.createElement("span");
+
       const btn = document.createElement("button");
       btn.className = "outright-bet-btn";
-      btn.textContent = `${selection.team_name} - ${selection.odds}`;
+
+      teamName.textContent = `${selection.team_name}`;
+      odds.textContent = selection.odds;
+
+      btn.appendChild(teamName);
+      btn.appendChild(odds);
+
       btn.dataset.teamId = selection.team_id;
       btn.dataset.odds = selection.odds;
       outrightContent.appendChild(btn);
@@ -167,11 +176,16 @@ export default class Renders {
   ) {
     const outRightScreen = document.querySelector("#outright-screen");
     const outrightContent = document.querySelector("#outright-content");
+    const betDetails = document.querySelector(".bet-type-selector");
 
     if (!outrightData) {
       outrightContent.innerHTML = "";
       outRightScreen.classList.add("hide");
       return;
+    }
+    console.log("here ", betDetails);
+    if (betDetails) {
+      betDetails.classList.add("hide");
     }
 
     if (!outRightScreen || !outrightContent) return;
@@ -182,7 +196,16 @@ export default class Renders {
     outrightData.teamOdds.forEach((selection) => {
       const btn = document.createElement("button");
       btn.className = "outright-bet-btn";
-      btn.textContent = `${selection.team} - ${selection.odds}`;
+
+      let teamName = document.createElement("span");
+      let odds = document.createElement("span");
+
+      teamName.textContent = `${selection.team}`;
+      odds.textContent = `${selection.odds}`;
+
+      btn.appendChild(teamName);
+      btn.appendChild(odds);
+
       btn.dataset.team = selection.team;
       btn.dataset.odds = String(selection.odds);
       outrightContent.appendChild(btn);
@@ -350,7 +373,7 @@ export default class Renders {
     const HTMLDivElement = document.querySelector("#tournament-no");
     if (!HTMLDivElement) return;
 
-    HTMLDivElement.innerHTML = String(payload.tournament.tournamentNo);
+    HTMLDivElement.innerHTML = `(${payload.tournament.tournamentNo})`;
   }
 
   renderBalance(payload: any) {
@@ -408,12 +431,17 @@ export default class Renders {
 
   async renderMatchResults(
     payload: CurrentRoundType,
-    tournamentName: string
+    tournamentName: string,
+    playerView: PlayerViewType,
+    credit: CreditType
   ): Promise<void> {
     if (!payload) return;
 
     const transitionScreenEl = document.querySelector("#transition-screen");
     const resultsScreenEl = document.querySelector("#results-screen");
+    const roundSummaryEl = document.querySelector("#round-summary");
+
+    if (roundSummaryEl) roundSummaryEl.classList.add("hide");
 
     if (transitionScreenEl) transitionScreenEl.classList.remove("hide");
 
@@ -423,6 +451,8 @@ export default class Renders {
     if (resultsScreenEl) resultsScreenEl.classList.remove("hide");
 
     await this.displayMatchResults(payload, tournamentName);
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    this.renderPlayerView(playerView, credit);
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
@@ -449,7 +479,7 @@ export default class Renders {
       //@ts-ignore
       resultsList.style.height = "calc(70% - 20px)";
     }
-
+    const profit = playerView.profit < 0 ? 0 : playerView.profit;
     roundSummaryEl.classList.remove("hide");
     roundSummaryEl.innerHTML = `<div>Staked: ${
       credit.currency
@@ -459,7 +489,7 @@ export default class Renders {
                                 } <b>${playerView.returned.toFixed(2)}</b></div>
                                 <div>Profit: ${
                                   credit.currency
-                                } <b>${playerView.profit.toFixed(2)}</b></div>`;
+                                } <b>${profit.toFixed(2)}</b></div>`;
   }
 
   renderBetsCounter(playerView: PlayerViewType) {

@@ -249,7 +249,6 @@ export const onResponse = (response: any) => {
       __Modal.showBetModal(__PlayerView).then(() => {
         __BetOptions.resetBets();
         __SelectedOutrightTeam = null;
-        betBtn.disabled = false;
       });
       __Renders.renderBalance(__Credit);
       break;
@@ -262,6 +261,10 @@ export const onBroadcastResponse = (response: any) => {
 
   if (response.credit) {
     __Credit = response.credit;
+  }
+  const betDetails = document.querySelector(".bet-type-selector");
+  if (betDetails) {
+    betDetails.classList.remove("hide");
   }
 
   const cRound: any =
@@ -286,15 +289,22 @@ export const onBroadcastResponse = (response: any) => {
       __PublicView.tournament.isEnded
         ? __PublicView.currentRound
         : __PublicView.previousRound,
-      __CurrentRoom.name
+      __CurrentRoom.name,
+      __PlayerView,
+      __Credit
     );
   }
 
   __Proxi.gameStarted(__PublicView.currentRound.name);
+
+  __Renders.renderTournamentNumber(__PublicView);
   __Renders.renderBetsCounter(__PlayerView);
   __Renders.renderCountdownTimer(__PublicView.secsToExtr);
   __Renders.renderRoundName(__PublicView.currentRound);
-  __Renders.renderPlayerView(__PlayerView, __Credit);
+  // __Renders.renderPlayerView(__PlayerView, __Credit);
+
+  // __Renders.renderOutrightBetting({ teamOdds: testOut }, handleOutrightBets);
+
   __Renders.renderOutrightBetting(
     __PublicView.outrightBetting,
     handleOutrightBets
