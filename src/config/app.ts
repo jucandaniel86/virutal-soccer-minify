@@ -133,6 +133,7 @@ export type PlayerOutrightBetType = {
   odds: number;
   stake: number;
   team: string;
+  win: number;
 };
 
 export type PlayerViewType = {

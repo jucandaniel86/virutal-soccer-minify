@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>Turbo Footbal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -149,13 +152,20 @@
         <div class="bet-history-content">
           <h2 id="app-game-name">SETTINGS</h2>
           <div class="bet-history-header">
-            <h2 class="active">INFO</h2>
+            <h2 id="app-info-btn" class="active">INFO</h2>
             <h2 id="app-history-btn">BET HISTORY</h2>
             <span id="bet-history-close-btn" class="modal-close-btn"
               >CLOSE</span
             >
           </div>
-          <div id="bet-history-list" class="bet-history-list">
+          <div id="bet-history-list" class="hide">
+            <iframe
+              src="history/history.html"
+              id="history-iframe"
+              class="history-iframe"
+            ></iframe>
+          </div>
+          <div id="bet-history-info" class="bet-history-list">
             <h3>Game Overview</h3>
             <p>
               Turbo Football: Champions is a game which allows you to bet on the

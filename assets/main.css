@@ -695,7 +695,7 @@ body {
 
 #outright-screen {
   top: 56px;
-  bottom: 120px;
+  bottom: 115px;
   align-items: flex-start;
   height: auto !important;
   z-index: 10;
@@ -766,6 +766,7 @@ body {
   overflow-y: auto;
   padding: 10px;
   gap: 10px;
+  background-color: #fff;
 }
 .outright-content h3 {
   color: var(--base-color);
@@ -863,4 +864,32 @@ body {
 
 .mb-0 {
   margin-bottom: 0 !important;
+}
+
+.history-iframe,
+#bet-history-list {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.error-wrapper.soft {
+  background-color: transparent;
+}
+
+.error-wrapper.soft.hide .error-content {
+  top: -30%;
+}
+
+.error-wrapper.soft.hide {
+  display: flex !important;
+}
+
+.error-wrapper.soft .error-content {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: top 250ms;
+  background-color: #fff;
 }

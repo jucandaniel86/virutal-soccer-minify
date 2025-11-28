@@ -2,6 +2,7 @@ import { PlayerViewType } from "../config/app";
 
 export default class ModalCore {
   private hiddenClass = "hide";
+  private autoCloseTime = 2000;
 
   /**
    *
@@ -9,11 +10,37 @@ export default class ModalCore {
    * @param message
    * @returns {void}
    */
-  showModal(modalEl: HTMLDivElement, message: string = ""): void {
+  showModal(
+    modalEl: HTMLDivElement,
+    message: string = "",
+    soft: boolean = false
+  ): void {
     if (message && modalEl.querySelector("p")) {
       modalEl.querySelector("p").textContent = message;
     }
-    if (modalEl) modalEl.classList.remove(this.hiddenClass);
+    const reloadBtn = document.querySelector("#reloadBtn");
+    if (soft) {
+      if (reloadBtn) {
+        reloadBtn.classList.add(this.hiddenClass);
+        modalEl.classList.add("soft");
+      }
+      setTimeout(() => {
+        if (modalEl) modalEl.classList.remove(this.hiddenClass);
+      }, 100);
+
+      setTimeout(() => {
+        if (modalEl) modalEl.classList.add(this.hiddenClass);
+        if (modalEl) modalEl.classList.remove("soft");
+      }, this.autoCloseTime);
+      return;
+    } else {
+      if (reloadBtn) {
+        reloadBtn.classList.remove(this.hiddenClass);
+        modalEl.classList.remove("soft");
+      }
+      if (modalEl) modalEl.classList.remove(this.hiddenClass);
+      return;
+    }
   }
 
   /**
@@ -21,11 +48,11 @@ export default class ModalCore {
    * @param message
    * @returns
    */
-  showErrorModal(message: string) {
+  showErrorModal(message: string, soft: boolean = false) {
     const modalEl: HTMLDivElement = document.querySelector("#error");
     if (!modalEl) return;
 
-    this.showModal(modalEl, message);
+    this.showModal(modalEl, message, soft);
   }
 
   /**
@@ -82,7 +109,7 @@ export default class ModalCore {
       setTimeout(() => {
         this.hideModal(betModal);
         resolve();
-      }, 2000);
+      }, this.autoCloseTime);
     });
   }
 

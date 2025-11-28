@@ -37,11 +37,10 @@ export let __BetType = 0;
 export let __ChampionshipEnded = false;
 export let __SelectedOutrightTeam: OutrightTeamType | null = null;
 export let __CurrentRound = "";
+export let __OutrightBettingRound = false;
 
 const displayError = (error: ErrorType) => {
-  const ErrorModalWrapper = document.querySelector("#error");
-  ErrorModalWrapper.classList.remove("hide");
-  ErrorModalWrapper.querySelector("p").innerHTML = error.errorMessage;
+  __Modal.showErrorModal(error.errorMessage, false);
 
   __Proxi.error(error.errorCode, error.errorMessage, error.errorType);
 };
@@ -235,7 +234,8 @@ export const onResponse = (response: any) => {
           response.playerView.error.errorType
         );
         return __Modal.showErrorModal(
-          response.playerView.error.message || "Unknow error"
+          response.playerView.error.message || "Unknow error",
+          true
         );
       }
       const betBtn: HTMLButtonElement = document.querySelector("#bet-button");
@@ -252,6 +252,9 @@ export const onBroadcastResponse = (response: any) => {
   if (response.credit) {
     __Credit = response.credit;
   }
+
+  __OutrightBettingRound = typeof __PublicView.outrightBetting !== "undefined";
+
   const betDetails = document.querySelector(".bet-type-selector");
   if (betDetails) {
     betDetails.classList.remove("hide");
@@ -328,11 +331,20 @@ const handleStakeChange = (_stake: any) => {
 const handlePlaceBet = async () => {
   if (!__CurrentBets || __CurrentBets.length === 0 || !__CurrentStake) return;
 
-  if (__SelectedOutrightTeam) {
+  if (__SelectedOutrightTeam && __OutrightBettingRound) {
     __Websocket.outrightBet(
       __SelectedOutrightTeam,
       parseFloat(Number(__CurrentStake).toFixed(2))
     );
+
+    __SelectedOutrightTeam = null;
+
+    const outrightBetButtons = Array.from(
+      document.querySelectorAll(".outright-bet-btn")
+    );
+    if (outrightBetButtons.length) {
+      outrightBetButtons.forEach((el) => el.classList.remove("selected"));
+    }
     return;
   }
   const betBtn: HTMLButtonElement = document.querySelector("#bet-button");
@@ -352,6 +364,42 @@ const handlePlaceBet = async () => {
   __SelectedOutrightTeam = null;
 
   await animateStar();
+};
+
+export const handleInfoPopupActions = () => {
+  const historyBtn = document.querySelector("#app-history-btn");
+  const infoBtn = document.querySelector("#app-info-btn");
+  const infoContent = document.querySelector("#bet-history-info");
+  const historyContent = document.querySelector("#bet-history-list");
+
+  if (infoBtn) {
+    infoBtn.addEventListener("click", (event: PointerEvent) => {
+      historyBtn.classList.remove("active");
+      infoBtn.classList.add("active");
+      infoContent.classList.remove("hide");
+      historyContent.classList.add("hide");
+    });
+  }
+
+  if (historyBtn) {
+    historyBtn.addEventListener("click", (event: PointerEvent) => {
+      __Proxi.goToExternalHistory(false);
+      return;
+      historyBtn.classList.add("active");
+      infoBtn.classList.remove("active");
+      infoContent.classList.add("hide");
+      historyContent.classList.remove("hide");
+    });
+  }
+};
+
+const generateHistoryIframeURL = () => {
+  const historyURL = __Proxi.goToExternalHistory();
+  const historyIframe: HTMLIFrameElement =
+    document.querySelector("#history-iframe");
+  if (historyURL && historyIframe) {
+    historyIframe.src = historyURL;
+  }
 };
 
 export const __init = () => {
@@ -380,11 +428,9 @@ export const __init = () => {
   const menuBtn = document.querySelector("#app-menu");
   const betHistoryModal = document.querySelector("#bet-history-modal");
   const betHistoryCloseBtn = document.getElementById("bet-history-close-btn");
-  const historyBtn = document.querySelector("#app-history-btn");
 
-  if (historyBtn) {
-    historyBtn.addEventListener("click", () => __Proxi.goToExternalHistory());
-  }
+  handleInfoPopupActions();
+  generateHistoryIframeURL();
 
   if (menuBtn)
     menuBtn.addEventListener("click", () => __Modal.showBetHistory());

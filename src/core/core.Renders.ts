@@ -495,7 +495,16 @@ export default class Renders {
                                 <div>Profit: ${
                                   credit.currency
                                 } <b>${profit.toFixed(2)}</b></div>`;
-    return;
+
+    if (typeof playerView.outrightBets === "undefined") return;
+
+    const totalOutrightStaked = playerView.outrightBets.reduce((prev, curr) => {
+      return prev + curr.stake;
+    }, 0);
+    const totalWin = playerView.outrightBets.reduce((prev, curr) => {
+      return prev + curr.win;
+    }, 0);
+    const totalProfit = totalWin > 0 ? totalWin - totalOutrightStaked : 0;
 
     //render outright summary
     outrightSumaryEl.innerHTML = "";
@@ -504,13 +513,13 @@ export default class Renders {
     outrightSumaryEl.style.bottom = `${roundSummaryEl.clientHeight}px`;
     outrightSumaryEl.innerHTML = `
 		<h3 class="mt-0 mb-0">Outright Bet</h3>
-		<div>Staked: ${credit.currency} <b>${playerView.staked.toFixed(2)}</b></div>
+		<div>Staked: ${credit.currency} <b>${totalOutrightStaked.toFixed(2)}</b></div>
                                 <div>Returns: ${
                                   credit.currency
-                                } <b>${playerView.returned.toFixed(2)}</b></div>
+                                } <b>${totalWin.toFixed(2)}</b></div>
                                 <div>Profit: ${
                                   credit.currency
-                                } <b>${profit.toFixed(2)}</b></div>`;
+                                } <b>${totalProfit.toFixed(2)}</b></div>`;
   }
 
   renderBetsCounter(playerView: PlayerViewType) {

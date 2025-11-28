@@ -2,8 +2,10 @@ import { resolve as _resolve, join, dirname } from "path";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import { fileURLToPath } from "url";
+import CopyPlugin from "copy-webpack-plugin";
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
+const buildPath = "build";
+const resPath = "history";
 const entry = "./src/index.ts";
 const module = {
   rules: [
@@ -40,6 +42,20 @@ const plugins = [
   }),
   new MiniCssExtractPlugin({
     filename: "[hash].css",
+  }),
+  new CopyPlugin({
+    patterns: [
+      {
+        from: "history/",
+        to: _resolve(__dirname, buildPath + "/" + resPath),
+        globOptions: {
+          ignore: [
+            // Ignore all `flp` editor files
+            "**/*.flp",
+          ],
+        },
+      },
+    ],
   }),
 ];
 
