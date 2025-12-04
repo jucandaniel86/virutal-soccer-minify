@@ -93,6 +93,12 @@ export default class BetOptions {
   }
 
   private handleButtons() {
+    console.log(
+      this.bets.length,
+      this.bets.length === 0,
+      this.betSingleBtn,
+      this.betAccumulatorBtn
+    );
     this.betSingleBtn.disabled = this.bets.length === 0;
     this.betAccumulatorBtn.disabled = this.bets.length < 2;
     this.betBtn.disabled = this.bets.length === 0;
@@ -104,6 +110,7 @@ export default class BetOptions {
       this.betSingleBtn.classList.remove("active");
       this.betAccumulatorBtn.classList.remove("active");
       this.betAccumulatorBtn.textContent = "Accumulator";
+      return;
     }
     if (this.bets.length === 1) {
       this.selectBetType(1);
@@ -119,6 +126,7 @@ export default class BetOptions {
       if (currentAccumulator) {
         this.betAccumulatorBtn.textContent = currentAccumulator.label;
       }
+      return;
     }
 
     this.betSingleBtn.disabled = false;

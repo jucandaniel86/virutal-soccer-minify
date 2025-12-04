@@ -188,6 +188,10 @@ export default class Renders {
     const outrightContent = document.querySelector("#outright-content");
     const betDetails = document.querySelector(".bet-type-selector");
 
+    //buttons
+    const winnerGroupBtn = document.querySelector("#group-winners-btn");
+    const outrightWinnerBtn = document.querySelector("#outright-winner-btn");
+
     if (!outrightData) {
       outrightContent.innerHTML = "";
       outRightScreen.classList.add("hide");
@@ -199,27 +203,95 @@ export default class Renders {
 
     if (!outRightScreen || !outrightContent) return;
 
+    if (winnerGroupBtn && typeof outrightData.groups !== "undefined") {
+      winnerGroupBtn.classList.remove("hide");
+    }
+
     outRightScreen.classList.remove("hide");
 
-    outrightContent.innerHTML = "";
-    outrightData.teamOdds.forEach((selection) => {
-      const btn = document.createElement("button");
-      btn.className = "outright-bet-btn";
+    //methods
+    const resetOutrightButtons = () => {
+      const buttons = Array.from(document.querySelectorAll(".bet-type-btn"));
+      buttons.forEach((button) => button.classList.remove("active"));
+    };
+    const renderOutrightData = () => {
+      outrightContent.innerHTML = "";
+      outrightData.teamOdds.forEach((selection) => {
+        const btn = document.createElement("button");
+        btn.className = "outright-bet-btn";
 
-      let teamName = document.createElement("span");
-      let odds = document.createElement("span");
+        let teamName = document.createElement("span");
+        let odds = document.createElement("span");
 
-      teamName.textContent = `${selection.team}`;
-      odds.textContent = `${selection.odds}`;
+        teamName.textContent = `${selection.team}`;
+        odds.textContent = `${selection.odds}`;
 
-      btn.appendChild(teamName);
-      btn.appendChild(odds);
+        btn.appendChild(teamName);
+        btn.appendChild(odds);
 
-      btn.dataset.team = selection.team;
-      btn.dataset.odds = String(selection.odds);
-      outrightContent.appendChild(btn);
-    });
+        btn.dataset.team = selection.team;
+        btn.dataset.odds = String(selection.odds);
+        outrightContent.appendChild(btn);
+      });
+    };
 
+    const renderOutrightGroups = () => {
+      outrightContent.innerHTML = "";
+
+      if (typeof outrightData.groups === "undefined") return;
+
+      outrightData.groups.forEach((group) => {
+        const header = document.createElement("div");
+        header.classList.add("outright-group-header");
+        header.innerText = group.name;
+
+        outrightContent.appendChild(header);
+
+        group.teamOdds.forEach((selection) => {
+          const btn = document.createElement("button");
+          btn.className = "outright-bet-btn";
+
+          let teamName = document.createElement("span");
+          let odds = document.createElement("span");
+
+          teamName.textContent = `${selection.team}`;
+          odds.textContent = `${selection.odds}`;
+
+          btn.appendChild(teamName);
+          btn.appendChild(odds);
+
+          btn.dataset.team = selection.team;
+          btn.dataset.odds = String(selection.odds);
+          outrightContent.appendChild(btn);
+        });
+      });
+    };
+
+    //events
+    if (outrightWinnerBtn) {
+      outrightWinnerBtn.removeEventListener("click", renderOutrightData);
+      outrightWinnerBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        resetOutrightButtons();
+        outrightWinnerBtn.classList.add("active");
+        renderOutrightData();
+      });
+    }
+
+    if (winnerGroupBtn) {
+      winnerGroupBtn.removeEventListener("click", renderOutrightGroups);
+      winnerGroupBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        resetOutrightButtons();
+        winnerGroupBtn.classList.add("active");
+        renderOutrightGroups();
+      });
+    }
+
+    //on render
+    renderOutrightData();
+
+    //on render ready
     if (typeof onRenderReady === "function") {
       onRenderReady();
     }

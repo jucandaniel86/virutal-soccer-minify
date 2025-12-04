@@ -107,8 +107,14 @@ export type OutrightTeamType = {
   odds: number;
 };
 
+export type OutrightGroupType = {
+  name: string;
+  teamOdds: OutrightTeamType[];
+};
+
 export type OutrightBettingType = {
   teamOdds: OutrightTeamType[];
+  groups?: OutrightGroupType[];
 };
 
 export type PublicViewType = {
@@ -166,4 +172,4 @@ export type ErrorType = {
 };
 
 export const LOG_PROXI = true;
-export const OUTRIGHT_TEST = true;
+export const OUTRIGHT_TEST = false;

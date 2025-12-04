@@ -9,7 +9,9 @@ import {
   RoundTypesE,
   OutrightTeamType,
   ErrorType,
+  OUTRIGHT_TEST,
 } from "../config/app";
+import { OUTRIGHT_BETS } from "../config/outrightbets";
 import BetOptions from "./core.BetOptions";
 import ModalCore from "./core.Modal";
 import ProxiCore from "./core.Proxi";
@@ -216,6 +218,13 @@ export const onResponse = (response: any) => {
         __PublicView.outrightBetting,
         handleOutrightBets
       );
+
+      if (OUTRIGHT_TEST) {
+        __Renders.renderOutrightBetting(
+          OUTRIGHT_BETS as any,
+          handleOutrightBets
+        );
+      }
 
       __Proxi.gameReady({});
       __Proxi.gameStarted(__PublicView.currentRound.name);

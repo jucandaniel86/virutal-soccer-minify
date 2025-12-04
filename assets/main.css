@@ -975,3 +975,11 @@ background-color: #333;
 #app-game-name {
   color: var(--app-game-name-textcolor);
 }
+
+.outright-group-header {
+  text-align: left;
+  color: var(--base-color);
+  font-size: 16px;
+  margin: 0.5rem 0;
+  font-weight: bold;
+}
