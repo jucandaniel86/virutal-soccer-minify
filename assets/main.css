@@ -6,15 +6,66 @@
   --global-padding-right: 10px;
   --global-border-radius: 5px;
   --global-game-width: 450px;
+  --global-logo: url(./logo.png);
+  --client-logo: url(./virginbet-logo.png);
 
   --header-border-radius: 5px;
 
   --league-table-header-color: #8c8c8c;
   --league-table-body-color: #292b38;
+  --league-table-body-border: 1px solid #eee;
+  --league-table-header-bgcolor: transparent;
 
   --grey-700: #292b38;
 
   --bet-buttons-height: 42px;
+  --loading-text-color: inherit;
+
+  --game-screen-bg-color: #fff;
+  --topbar-bg-color: #e10a0a;
+  --footer-bg-color: #f1f2f2;
+  --footer-border: 1px solid #e8e8e8;
+  --topinfo-text-color: #fff;
+
+  --odds-btn-bgcolor: #f6f6f6;
+  --odds-btn-border: 1px solid #e9e9e9;
+  --odds-btn-textcolor: #292b38;
+
+  --team-textcolor: #1c1c1e;
+  --match-fixture-bgcolor: #fff;
+  --match-fixture-border: 1px solid #eee;
+  --match-fixture-ptop: 10px;
+  --match-fixture-pbottom: 10px;
+
+  --bet-type-btn-border: 1px solid #d8d8d8;
+  --bet-type-btn-bgcolor: #eee;
+
+  --stake-btn-border: 1px solid #d8d8d8;
+  --stake-btn-bgcolor: #fff;
+  --stake-input-textcolor: #292b38;
+
+  --overlay-bgcolor: rgba(255, 255, 255, 0.95);
+
+  --result-item-bgcolor: #f0f0f0;
+  --result-item-border: 1px solid #ddd;
+
+  --result-round-name-textcolor: inherit;
+  --knockout-round-title-bgcolor: transparent;
+  --knockout-results-table-border: 1px solid #f2f2f2;
+  --knockout-results-table-textcolor: inherit;
+  --knockout-round-title-textcolor: black;
+  --mainscore-textcolor: inherit;
+  --knockout-round-title-border: 1px solid #4a476a;
+  --overlay-textcolor: inherit;
+
+  --outright-content-bgcolor: #fff;
+  --loadingscreen-bgcolor: transparent;
+
+  --bet-history-bgcolor: #fff;
+  --bet-history-textcolor: inherit;
+  --app-game-name-textcolor: inherit;
+
+  --outright-bet-textcolor: #333;
 }
 
 html,
@@ -24,7 +75,7 @@ body {
 }
 body {
   font-family: "Barlow", sans-serif;
-  background-color: #f4f4f4;
+  background-color: var(--base-bg-color);
   color: #333;
   margin: 0;
   padding: 0;
@@ -40,7 +91,7 @@ body {
 .main {
   width: calc(100% - var(--global-padding));
   max-width: 450px;
-  background-color: #fff;
+  background-color: var(--game-screen-bg-color);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -67,6 +118,10 @@ body {
   justify-content: center;
 }
 
+.loading-logo__wrapper .text-center {
+  color: var(--loading-text-color);
+}
+
 .main-content {
   flex: 1;
   overflow-y: auto;
@@ -80,14 +135,15 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: var(--loadingscreen-bgcolor);
 }
 
 .top-info-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--base-color);
-  color: white;
+  background-color: var(--topbar-bg-color);
+  color: var(--topinfo-text-color);
   padding: 10px 15px;
   position: relative;
   z-index: 10;
@@ -101,6 +157,11 @@ body {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.8em;
+  margin-top: 2px;
+}
+
+.legue-table thead {
+  background-color: var(--league-table-header-bgcolor);
 }
 
 .legue-table thead th {
@@ -118,7 +179,7 @@ body {
 .legue-table tbody td {
   padding: 8px 4px;
   text-align: left;
-  border-bottom: 1px solid #eee;
+  border-bottom: var(--league-table-body-border);
   color: var(--league-table-body-color);
   font-size: 16px;
 }
@@ -156,7 +217,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #eee;
+  border-bottom: var(--match-fixture-border);
   padding: 6px 0;
 }
 
@@ -165,7 +226,7 @@ body {
   display: flex;
   flex-direction: column;
   font-size: 14px;
-  color: #1c1c1e;
+  color: var(--team-textcolor);
 }
 
 .odds-buttons {
@@ -174,12 +235,17 @@ body {
   justify-content: space-between;
 }
 
+/**
+background-color: #333;
+    border: 1px solid #555;
+		*/
+
 .odds-buttons button {
   width: 32%;
   padding: 5px 4px;
-  background-color: #f6f6f6;
-  border: 1px solid #e9e9e9;
-  color: #292b38;
+  background-color: var(--odds-btn-bgcolor);
+  border: 1px solid var(--odds-btn-border);
+  color: var(--odds-btn-textcolor);
   border-radius: 5px;
   cursor: pointer;
   font-size: 0.9em;
@@ -198,8 +264,8 @@ body {
   border-radius: 5px;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  background-color: #f1f2f2;
-  border: 1px solid #e8e8e8;
+  background-color: var(--footer-bg-color);
+  border: var(--footer-border);
   margin-bottom: 1px;
   padding: 5px 10px;
 }
@@ -219,8 +285,8 @@ body {
   flex: 1;
   padding: 10px;
   font-weight: bold;
-  border: 1px solid #d8d8d8;
-  background-color: #eee;
+  border: var(--bet-type-btn-border);
+  background-color: var(--bet-type-btn-bgcolor);
   color: #7b7b7b;
   cursor: pointer;
   font-size: 14px;
@@ -280,8 +346,7 @@ body {
 
 .bet-info {
   display: flex;
-  border-top: 1px solid #d0d6d9;
-  background: #e8ebed;
+
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   padding: 5px 10px;
@@ -289,6 +354,8 @@ body {
   color: #616161;
   justify-content: space-between;
   gap: 15px;
+  background: var(--footer-bg-color);
+  border-top: var(--footer-border);
 }
 
 .bet-info div,
@@ -314,7 +381,7 @@ body {
   left: 0;
   right: 0;
   bottom: 25px;
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: var(--overlay-bgcolor);
   z-index: 99;
   display: flex;
   justify-content: center;
@@ -365,6 +432,7 @@ body {
 .overlay-content p {
   font-size: 1.2em;
   font-weight: bold;
+  color: var(--overlay-textcolor);
 }
 
 @keyframes spin {
@@ -378,8 +446,8 @@ body {
 }
 
 .result-item {
-  background-color: #f0f0f0;
-  border: 1px solid #ddd;
+  background-color: var(--result-item-bgcolor);
+  border: var(--result-item-border);
   border-radius: 8px;
   padding: 12px 15px;
   margin: 10px auto;
@@ -409,6 +477,7 @@ body {
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  color: var(--mainscore-textcolor);
 }
 
 .result-team-a {
@@ -426,13 +495,14 @@ body {
 }
 
 .knockout-round-title {
-  color: black;
+  color: var(--knockout-round-title-textcolor);
   font-size: 1em;
   font-weight: bold;
   margin-top: 15px;
   margin-bottom: 5px;
-  border-bottom: 1px solid #4a476a;
+  border-bottom: var(--knockout-round-title-border);
   padding-bottom: 5px;
+  background: var(--knockout-round-title-bgcolor);
 }
 
 .knockout-results-table {
@@ -446,7 +516,8 @@ body {
 .knockout-results-table td {
   padding: 6px;
   text-align: left;
-  border-bottom: 1px solid #f2f2f2;
+  border-bottom: var(--knockout-results-table-border);
+  color: var(--knockout-results-table-textcolor);
 }
 
 .knockout-results-table th {
@@ -493,8 +564,8 @@ body {
 }
 
 .stake-control button {
-  border: 1px solid #d8d8d8;
-  background-color: #fff;
+  border: var(--stake-btn-border);
+  background-color: var(--stake-btn-bgcolor);
   font-size: 1.2em;
   width: 48px;
   height: var(--bet-buttons-height);
@@ -506,7 +577,7 @@ body {
 }
 
 .stake-input {
-  color: var(--grey-700);
+  color: var(--stake-input-textcolor);
   width: max-content;
   font-size: 22px;
   font-weight: bold;
@@ -619,7 +690,7 @@ body {
 }
 
 .bet-history-content {
-  background-color: #fff;
+  background-color: var(--bet-history-bgcolor);
   color: #333;
   width: 95%;
   max-width: 400px;
@@ -672,8 +743,9 @@ body {
   padding: 0;
   top: -10px;
   position: sticky;
-  background-color: #fff;
-  padding-top: 10px;
+  background-color: var(--match-fixture-bgcolor);
+  padding-top: var(--match-fixture-ptop);
+  padding-bottom: var(--match-fixture-pbottom);
   margin-top: -10px;
 }
 
@@ -709,7 +781,7 @@ body {
 }
 
 .logo {
-  background-image: url(./logo.png);
+  background-image: var(--global-logo);
   background-size: contain;
   background-repeat: no-repeat;
   width: 190px;
@@ -718,10 +790,11 @@ body {
   margin: 0 auto;
 }
 
-.virgin-logo {
-  background-image: url(./virginbet-logo.png);
+.client-logo {
+  background-image: var(--client-logo);
   background-size: contain;
   background-repeat: no-repeat;
+  background-position: center center;
   width: 100%;
   height: 80px;
   display: block;
@@ -766,7 +839,7 @@ body {
   overflow-y: auto;
   padding: 10px;
   gap: 10px;
-  background-color: #fff;
+  background-color: var(--outright-content-bgcolor);
 }
 .outright-content h3 {
   color: var(--base-color);
@@ -778,9 +851,9 @@ body {
   width: 100%;
   padding: 12px;
   margin-bottom: 5px;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  color: #333;
+  background-color: var(--result-item-bgcolor);
+  border: var(--result-item-border);
+  color: var(--outright-bet-textcolor);
   border-radius: 5px;
   cursor: pointer;
   text-align: left;
@@ -813,7 +886,7 @@ body {
 
 .menu-icon {
   border: none;
-  background-image: url(../assets/menu.svg);
+  background-image: url(./menu.svg);
   background-repeat: no-repeat;
   background-size: cover;
   width: 35px;
@@ -828,6 +901,7 @@ body {
   overflow-y: scroll;
   scrollbar-color: var(--base-color) #fff;
   text-align: left;
+  color: var(--bet-history-textcolor);
 }
 
 #bet-history-modal {
@@ -892,4 +966,12 @@ body {
   transform: translateX(-50%);
   transition: top 250ms;
   background-color: #fff;
+}
+
+#results-round-name {
+  color: var(--result-round-name-textcolor);
+}
+
+#app-game-name {
+  color: var(--app-game-name-textcolor);
 }

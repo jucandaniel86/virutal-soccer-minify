@@ -166,3 +166,4 @@ export type ErrorType = {
 };
 
 export const LOG_PROXI = true;
+export const OUTRIGHT_TEST = true;

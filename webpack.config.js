@@ -3,6 +3,7 @@ import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import { fileURLToPath } from "url";
 import CopyPlugin from "copy-webpack-plugin";
+import { type } from "os";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const buildPath = "build";
 const resPath = "history";
@@ -18,6 +19,14 @@ const module = {
       test: /\.css$/,
       use: [MiniCssExtractPlugin.loader, "css-loader"],
       exclude: /node_modules/,
+    },
+    {
+      test: /\.(jpe?g|png|gif)$/i,
+      loader: "file-loader",
+      type: "asset/resource",
+      options: {
+        name: "[name].[ext]",
+      },
     },
   ],
 };

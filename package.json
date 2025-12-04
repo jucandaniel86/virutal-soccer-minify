@@ -22,6 +22,7 @@
   "homepage": "https://github.com/jucandaniel86/virutal-soccer-minify#readme",
   "devDependencies": {
     "css-loader": "^7.1.2",
+    "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.6.4",
     "mini-css-extract-plugin": "^2.9.4",
     "ts-loader": "^9.5.4",
@@ -30,6 +31,8 @@
     "webpack-dev-server": "^5.2.2"
   },
   "dependencies": {
-    "copy-webpack-plugin": "^13.0.1"
+    "copy-webpack-plugin": "^13.0.1",
+    "image-webpack-loader": "^8.1.0",
+    "svg-url-loader": "^2.2.1"
   }
 }

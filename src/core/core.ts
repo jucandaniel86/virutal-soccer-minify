@@ -15,7 +15,8 @@ import ModalCore from "./core.Modal";
 import ProxiCore from "./core.Proxi";
 import Renders from "./core.Renders";
 import StakeSelector from "./core.StakeSelector";
-import { animateStar, isset } from "./core.Utils";
+import { ThemeGenerator } from "./core.ThemeGenerator";
+import { animateStar, getQueryParams, isset } from "./core.Utils";
 import WSCore from "./core.Websocket";
 
 //Core Libraries
@@ -29,6 +30,7 @@ export let __BetOptions: BetOptions;
 export let __Modal: ModalCore;
 export let __Credit: CreditType = null;
 export let __Proxi: ProxiCore;
+export let __Theme: ThemeGenerator;
 
 //Game Vars
 export let __CurrentStake = 0;
@@ -416,8 +418,11 @@ export const __init = () => {
   });
   __Modal = new ModalCore();
   __Proxi = new ProxiCore();
+  //@ts-ignore
+  __Theme = new ThemeGenerator(getQueryParams().siteID);
 
   __Proxi.listening();
+  __Theme.generate();
 
   //handle place bets
   document
