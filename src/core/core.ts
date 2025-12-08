@@ -9,6 +9,7 @@ import {
   OutrightTeamType,
   ErrorType,
   OUTRIGHT_TEST,
+  RoundTypesE,
 } from "../config/app";
 import { OUTRIGHT_BETS } from "../config/outrightbets";
 import BetOptions from "./core.BetOptions";
@@ -44,37 +45,37 @@ export let __OutrightBettingRound = false;
 export let __FixedPlayerReference = "";
 
 /* GROUPS */
-const GROUPS = {
-  GridData: {
-    Headers: ["Group", "Pos", "Team", "P", "W", "D", "L", "GD", "PTS"],
-    Rows: [
-      ["1", "1", "Mali", "3", "3", "0", "0", "5", "9"],
-      ["1", "2", "Morocco", "3", "2", "0", "1", "4", "6"],
-      ["1", "3", "Zambia", "3", "1", "0", "2", "-1", "3"],
-      ["1", "4", "Comoros", "3", "0", "0", "3", "-8", "0"],
-      ["2", "1", "Angola", "3", "3", "0", "0", "4", "9"],
-      ["2", "2", "Egypt", "3", "1", "1", "1", "3", "4"],
-      ["2", "3", "S. Africa", "3", "1", "1", "1", "-1", "4"],
-      ["2", "4", "Zimbabwe", "3", "0", "0", "3", "-6", "0"],
-      ["3", "1", "Nigeria", "3", "2", "0", "1", "3", "6"],
-      ["3", "2", "Tunisia", "3", "2", "0", "1", "2", "6"],
-      ["3", "3", "Uganda", "3", "2", "0", "1", "0", "6"],
-      ["3", "4", "Tanzania", "3", "0", "0", "3", "-5", "0"],
-      ["4", "1", "Senegal", "3", "2", "1", "0", "6", "7"],
-      ["4", "2", "DR Congo", "3", "1", "1", "1", "-1", "4"],
-      ["4", "3", "Benin", "3", "1", "1", "1", "-1", "4"],
-      ["4", "4", "Botswana", "3", "0", "1", "2", "-4", "1"],
-      ["5", "1", "Equ. Guinea", "3", "2", "1", "0", "2", "7"],
-      ["5", "2", "Algeria", "3", "1", "2", "0", "2", "5"],
-      ["5", "3", "Sudan", "3", "1", "0", "2", "1", "3"],
-      ["5", "4", "Burkina Faso", "3", "0", "1", "2", "-5", "1"],
-      ["6", "1", "Ivory Coast", "3", "2", "1", "0", "2", "7"],
-      ["6", "2", "Cameroon", "3", "1", "1", "1", "0", "4"],
-      ["6", "3", "Gabon", "3", "1", "0", "2", "-1", "3"],
-      ["6", "4", "Mozambique", "3", "0", "2", "1", "-1", "2"],
-    ],
-  },
-};
+// const GROUPS = {
+//   gridData: {
+//     headers: ["Group", "Pos", "Team", "P", "W", "D", "L", "GD", "PTS"],
+//     rows: [
+//       ["1", "1", "Mali", "3", "3", "0", "0", "5", "9"],
+//       ["1", "2", "Morocco", "3", "2", "0", "1", "4", "6"],
+//       ["1", "3", "Zambia", "3", "1", "0", "2", "-1", "3"],
+//       ["1", "4", "Comoros", "3", "0", "0", "3", "-8", "0"],
+//       ["2", "1", "Angola", "3", "3", "0", "0", "4", "9"],
+//       ["2", "2", "Egypt", "3", "1", "1", "1", "3", "4"],
+//       ["2", "3", "S. Africa", "3", "1", "1", "1", "-1", "4"],
+//       ["2", "4", "Zimbabwe", "3", "0", "0", "3", "-6", "0"],
+//       ["3", "1", "Nigeria", "3", "2", "0", "1", "3", "6"],
+//       ["3", "2", "Tunisia", "3", "2", "0", "1", "2", "6"],
+//       ["3", "3", "Uganda", "3", "2", "0", "1", "0", "6"],
+//       ["3", "4", "Tanzania", "3", "0", "0", "3", "-5", "0"],
+//       ["4", "1", "Senegal", "3", "2", "1", "0", "6", "7"],
+//       ["4", "2", "DR Congo", "3", "1", "1", "1", "-1", "4"],
+//       ["4", "3", "Benin", "3", "1", "1", "1", "-1", "4"],
+//       ["4", "4", "Botswana", "3", "0", "1", "2", "-4", "1"],
+//       ["5", "1", "Equ. Guinea", "3", "2", "1", "0", "2", "7"],
+//       ["5", "2", "Algeria", "3", "1", "2", "0", "2", "5"],
+//       ["5", "3", "Sudan", "3", "1", "0", "2", "1", "3"],
+//       ["5", "4", "Burkina Faso", "3", "0", "1", "2", "-5", "1"],
+//       ["6", "1", "Ivory Coast", "3", "2", "1", "0", "2", "7"],
+//       ["6", "2", "Cameroon", "3", "1", "1", "1", "0", "4"],
+//       ["6", "3", "Gabon", "3", "1", "0", "2", "-1", "3"],
+//       ["6", "4", "Mozambique", "3", "0", "2", "1", "-1", "2"],
+//     ],
+//   },
+// };
 
 const displayError = (error: ErrorType) => {
   __Modal.showErrorModal(error.errorMessage, false);
@@ -133,7 +134,7 @@ const handleOutrightBets = () => {
     const findSelected = __SelectedOutrightTeam.findIndex((_selected) => {
       return clickedButton.dataset.team === _selected.team;
     });
-    console.log(findSelected);
+
     if (findSelected !== -1) {
       clickedButton.classList.remove("selected");
       __SelectedOutrightTeam.splice(findSelected, 1);
@@ -283,6 +284,7 @@ export const onResponse = (response: any) => {
       __Proxi.gameStarted(__PublicView.currentRound.name);
       __Proxi.updateBalance(__Credit.amount, __Credit.currency);
       __Renders.renderBalance(__Credit);
+
       break;
     case RGS_ACTIONS.GAME:
       __PlayerView = response.playerView;
@@ -395,7 +397,7 @@ const handleStakeChange = (_stake: any) => {
 
 const handlePlaceBet = async () => {
   if (!__CurrentBets || __CurrentBets.length === 0 || !__CurrentStake) return;
-  console.log("PLACE BET", __SelectedOutrightTeam);
+
   if (__SelectedOutrightTeam && __OutrightBettingRound) {
     __Websocket.outrightBet(
       __SelectedOutrightTeam,
@@ -403,6 +405,7 @@ const handlePlaceBet = async () => {
     );
 
     resetOutrightBets();
+    __BetOptions.resetBets();
     return;
   }
   const betBtn: HTMLButtonElement = document.querySelector("#bet-button");

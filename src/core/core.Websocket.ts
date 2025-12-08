@@ -219,7 +219,7 @@ export default class WSCore {
       publicState: {
         action: "BET",
         payload: {
-          outrightBet: outrightPayload,
+          outrightBets: outrightPayload,
         },
       },
     });

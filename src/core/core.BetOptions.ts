@@ -195,11 +195,17 @@ export default class BetOptions {
     }
 
     if (this.betType === 1 || outrightBetting) {
-      const productOfOdds = this.bets.reduce(
-        (sum, selection) => sum + selection.odds * Number(stake),
-        0
-      );
-      maxWin = productOfOdds;
+      if (outrightBetting) {
+        maxWin = outrightBetting.reduce(
+          (sum, selection) => sum + selection.odds * Number(stake),
+          0
+        );
+      } else {
+        maxWin = this.bets.reduce(
+          (sum, selection) => sum + selection.odds * Number(stake),
+          0
+        );
+      }
     } else {
       if (this.bets.length > 0) {
         const productOfOdds = this.bets.reduce(

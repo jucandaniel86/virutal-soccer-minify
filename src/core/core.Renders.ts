@@ -25,6 +25,7 @@ export default class Renders {
     if (!htmlTable || !htmlBody) return;
 
     //reset
+    htmlTable.classList.remove("hide");
     htmlBody.innerHTML = "";
     htmlTable.querySelector("thead").innerHTML = "";
 
@@ -613,13 +614,79 @@ export default class Renders {
     betTypes.innerHTML = String(playerView.roundBets.length);
   }
 
+  resetListsData() {
+    const groupsDiv = document.querySelector("#groups-results-display");
+    const leagueTable = document.querySelector(".legue-table");
+    // const knockOutDiv = document.querySelector("#knockout-results-display");
+
+    if (groupsDiv) groupsDiv.classList.add("hide");
+    if (leagueTable) leagueTable.classList.add("hide");
+    // if (knockOutDiv) knockOutDiv.classList.add("hide");
+  }
+
   /**
    *
    * @param payload
    * @returns
    */
   renderGroups(payload: GroupData) {
-    if (!payload) return;
+    const groupsDiv = document.querySelector("#groups-results-display");
+
+    if (!groupsDiv || (!payload && !payload.gridData)) return;
+
+    groupsDiv.innerHTML = "";
+    let formatedGroups: any[] = [];
+    payload.gridData.rows.forEach((row: any[]) => {
+      let currentGroup = row[0];
+      let findGroup = formatedGroups.find((group) => group.id === currentGroup);
+
+      if (!findGroup) {
+        formatedGroups.push({
+          id: currentGroup,
+          headers: payload.gridData.headers,
+          rows: [row],
+        });
+      } else {
+        findGroup.rows.push(row);
+      }
+    });
+
+    console.log("GROUPS", formatedGroups);
+    formatedGroups.forEach((round) => {
+      //round header
+      const h3 = document.createElement("h3");
+      h3.textContent = `Group ${round.id}`;
+      h3.classList.add("knockout-round-title");
+      groupsDiv.appendChild(h3);
+
+      let tableHTML = `<table class="knockout-results-table">`;
+      tableHTML += "<tr>";
+      const headers = round.headers;
+
+      headers.forEach((header: any, i: number) => {
+        if (i > 0) {
+          tableHTML += `<td>${header}</td>`;
+        }
+      });
+
+      tableHTML += "</tr>";
+
+      round.rows.forEach((result: any) => {
+        tableHTML += "</tr>";
+
+        result.forEach((col: any, i: number) => {
+          if (i > 0) {
+            tableHTML += `<td>${col}</td>`;
+          }
+        });
+
+        tableHTML += "</tr>";
+      });
+      tableHTML += "</table>";
+      groupsDiv.innerHTML += tableHTML;
+    });
+
+    groupsDiv.classList.remove("hide");
   }
 
   /**
@@ -628,6 +695,7 @@ export default class Renders {
    * @param tournament
    */
   renderRoundTables(cRound: RoundTypesE, tournament: TournamentType) {
+    this.resetListsData();
     switch (cRound) {
       case RoundTypesE.LEAGUE:
         this.renderLeagueTable(tournament.league);
