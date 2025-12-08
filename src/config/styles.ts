@@ -117,6 +117,7 @@ export const Themes: AppThemeOptions[] = [
       { var: "outright-content-bgcolor", value: "rgba(26, 26, 26, 0.95)" },
       { var: "match-fixture-ptop", value: "5px" },
       { var: "match-fixture-pbottom", value: "5px" },
+      { var: "bet-history-bgcolor", value: "rgba(26, 26, 26, 0.95)" },
       { var: "bet-history-textcolor", value: "#fff" },
       { var: "app-game-name-textcolor", value: "#fff" },
       { var: "outright-bet-textcolor", value: "#fff" },

@@ -205,18 +205,21 @@ export default class WSCore {
     return false;
   }
 
-  outrightBet(payload: OutrightTeamType, stake: number) {
+  outrightBet(payload: OutrightTeamType[], stake: number) {
     if (!payload) return;
     this.lastAction = RGS_ACTIONS.GAME;
+
+    let outrightPayload = payload.map((_payload) => ({
+      team: _payload.team,
+      stake,
+    }));
+
     this.send({
       requestType: RGS_ACTIONS.GAME,
       publicState: {
         action: "BET",
         payload: {
-          outrightBet: {
-            team: payload.team,
-            stake,
-          },
+          outrightBet: outrightPayload,
         },
       },
     });

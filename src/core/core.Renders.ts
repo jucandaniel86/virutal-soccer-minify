@@ -1,6 +1,7 @@
 import {
   CreditType,
   CurrentRoundType,
+  GroupData,
   KnockoutRound,
   LegueData,
   OutrightBettingType,
@@ -614,6 +615,15 @@ export default class Renders {
 
   /**
    *
+   * @param payload
+   * @returns
+   */
+  renderGroups(payload: GroupData) {
+    if (!payload) return;
+  }
+
+  /**
+   *
    * @param cRound
    * @param tournament
    */
@@ -626,6 +636,9 @@ export default class Renders {
         if (!tournament.isEnded) {
           this.renderKnockoutRounds(tournament);
         }
+        break;
+      case RoundTypesE.GROUP:
+        this.renderGroups(tournament.groups);
         break;
     }
   }

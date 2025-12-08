@@ -71,6 +71,13 @@ export type KnockoutRound = {
   };
 };
 
+export type GroupData = {
+  gridData: {
+    headers: string[];
+    rows: any[];
+  };
+};
+
 export type PlayoffItemType = {
   et: number[];
   scleg1: number[];
@@ -89,11 +96,13 @@ export type TournamentType = {
   playoff: {
     items: PlayoffItemType[];
   };
+  groups?: GroupData;
 };
 
 export enum RoundTypesE {
   LEAGUE = "league",
   KNOCKOUT = "knockout",
+  GROUP = "group",
 }
 
 export type CurrentRoundType = {

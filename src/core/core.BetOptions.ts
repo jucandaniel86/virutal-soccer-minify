@@ -93,12 +93,6 @@ export default class BetOptions {
   }
 
   private handleButtons() {
-    console.log(
-      this.bets.length,
-      this.bets.length === 0,
-      this.betSingleBtn,
-      this.betAccumulatorBtn
-    );
     this.betSingleBtn.disabled = this.bets.length === 0;
     this.betAccumulatorBtn.disabled = this.bets.length < 2;
     this.betBtn.disabled = this.bets.length === 0;
@@ -179,7 +173,7 @@ export default class BetOptions {
     this.updateCalculations(payload);
   }
 
-  public updateCalculations(outrightBetting?: OutrightTeamType) {
+  public updateCalculations(outrightBetting?: OutrightTeamType[]) {
     const selectionCount = this.bets.length;
     const stake = this.stakeInput.dataset.stake;
     let maxWin = 0;
@@ -197,7 +191,7 @@ export default class BetOptions {
         : stake;
 
     if (outrightBetting) {
-      outlay = stake;
+      outlay = outrightBetting.length * parseFloat(stake);
     }
 
     if (this.betType === 1 || outrightBetting) {

@@ -139,14 +139,21 @@ export default class ProxiCore {
     console.groupEnd();
   }
 
-  public goToExternalHistory(_returnURL: boolean = true): void | string {
+  public goToExternalHistory(
+    _returnURL: boolean = true,
+    fixedPlayerReference: string
+  ): void | string {
     const queryParams: any = getQueryParams();
+
+    if (!queryParams.historyURL) {
+      return;
+    }
 
     const historyUrl: any = new URL(queryParams.historyURL);
 
     historyUrl.searchParams.append("siteID", queryParams.siteID as string);
     historyUrl.searchParams.append("gameID", queryParams.gameID as string);
-    historyUrl.searchParams.append("fixedID", queryParams.playToken as string);
+    historyUrl.searchParams.append("fixedID", fixedPlayerReference);
 
     if (_returnURL) return historyUrl;
 
