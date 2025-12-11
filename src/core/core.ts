@@ -120,40 +120,28 @@ const resetOutrightBets = () => {
   __SelectedOutrightTeam = [];
 };
 
-const handleOutrightBets = () => {
-  const outrightContent = document.querySelector("#outright-content");
+const handleOutrightTabChange = () => {
+  __SelectedOutrightTeam = [];
+};
 
-  if (!outrightContent) return;
-
-  const handleClickOutrightButton = (event: any) => {
-    //@ts-ignore
-    const clickedButton = event.target.closest(".outright-bet-btn");
-
-    if (!clickedButton) return;
-
-    const findSelected = __SelectedOutrightTeam.findIndex((_selected) => {
-      return clickedButton.dataset.team === _selected.team;
-    });
-
-    if (findSelected !== -1) {
-      clickedButton.classList.remove("selected");
-      __SelectedOutrightTeam.splice(findSelected, 1);
-    } else {
-      __SelectedOutrightTeam.push({
-        team: clickedButton.dataset.team,
-        odds: clickedButton.dataset.odds,
-      });
-      clickedButton.classList.add("selected");
-    }
-
-    __BetOptions.setOutrightBet(__SelectedOutrightTeam);
-  };
-
-  outrightContent.removeEventListener("click", handleClickOutrightButton);
-  outrightContent.addEventListener("click", (e) => {
-    e.preventDefault();
-    handleClickOutrightButton(e);
+const handleOutrightBets = (payload: any, e: any) => {
+  const findSelected = __SelectedOutrightTeam.findIndex((_selected) => {
+    return payload.team === _selected.team;
   });
+
+  if (findSelected !== -1) {
+    e.target.classList.remove("selected");
+    __SelectedOutrightTeam.splice(findSelected, 1);
+  } else {
+    __SelectedOutrightTeam.push({
+      team: payload.team,
+      odds: payload.odds,
+      type: payload.type,
+    });
+    e.target.classList.add("selected");
+  }
+
+  __BetOptions.setOutrightBet(__SelectedOutrightTeam);
 };
 
 export const initHTMLEvents = () => {
@@ -270,7 +258,8 @@ export const onResponse = (response: any) => {
       __Renders.renderRoundName(__PublicView.currentRound);
       __Renders.renderOutrightBetting(
         __PublicView.outrightBetting,
-        handleOutrightBets
+        handleOutrightBets,
+        handleOutrightTabChange
       );
 
       if (OUTRIGHT_TEST) {
@@ -367,7 +356,8 @@ export const onBroadcastResponse = (response: any) => {
 
   __Renders.renderOutrightBetting(
     __PublicView.outrightBetting,
-    handleOutrightBets
+    handleOutrightBets,
+    handleOutrightTabChange
   );
   __Renders.renderBalance(__Credit);
 
@@ -477,8 +467,13 @@ export const __init = () => {
   });
   __Modal = new ModalCore();
   __Proxi = new ProxiCore();
-  //@ts-ignore
-  __Theme = new ThemeGenerator(getQueryParams().siteID);
+
+  __Theme = new ThemeGenerator({
+    //@ts-ignore
+    siteID: getQueryParams()?.siteID,
+    //@ts-ignore
+    gameID: getQueryParams().gameID,
+  });
 
   __Proxi.listening();
   __Theme.generate();

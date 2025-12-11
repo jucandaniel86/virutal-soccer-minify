@@ -184,7 +184,8 @@ export default class Renders {
 
   renderOutrightBetting(
     outrightData: OutrightBettingType,
-    onRenderReady?: any
+    onClick?: any,
+    onTabChange?: any
   ) {
     const outRightScreen = document.querySelector("#outright-screen");
     const outrightContent = document.querySelector("#outright-content");
@@ -205,7 +206,7 @@ export default class Renders {
 
     if (!outRightScreen || !outrightContent) return;
 
-    if (winnerGroupBtn && typeof outrightData.groups !== "undefined") {
+    if (winnerGroupBtn && typeof outrightData.groupOdds !== "undefined") {
       winnerGroupBtn.classList.remove("hide");
     }
 
@@ -221,6 +222,15 @@ export default class Renders {
       outrightData.teamOdds.forEach((selection) => {
         const btn = document.createElement("button");
         btn.className = "outright-bet-btn";
+
+        btn.onclick = (e) =>
+          onClick(
+            {
+              ...selection,
+              type: "outright",
+            },
+            e
+          );
 
         let teamName = document.createElement("span");
         let odds = document.createElement("span");
@@ -240,32 +250,34 @@ export default class Renders {
     const renderOutrightGroups = () => {
       outrightContent.innerHTML = "";
 
-      if (typeof outrightData.groups === "undefined") return;
+      if (typeof outrightData.groupOdds === "undefined") return;
 
-      outrightData.groups.forEach((group) => {
-        const header = document.createElement("div");
-        header.classList.add("outright-group-header");
-        header.innerText = group.name;
+      outrightData.groupOdds.forEach((selection) => {
+        const btn = document.createElement("button");
+        btn.className = "outright-bet-btn";
 
-        outrightContent.appendChild(header);
+        btn.onclick = (e) => {
+          onClick(
+            {
+              ...selection,
+              type: "group",
+            },
+            e
+          );
+        };
 
-        group.teamOdds.forEach((selection) => {
-          const btn = document.createElement("button");
-          btn.className = "outright-bet-btn";
+        let teamName = document.createElement("span");
+        let odds = document.createElement("span");
 
-          let teamName = document.createElement("span");
-          let odds = document.createElement("span");
+        teamName.textContent = `${selection.team}`;
+        odds.textContent = `${selection.odds}`;
 
-          teamName.textContent = `${selection.team}`;
-          odds.textContent = `${selection.odds}`;
+        btn.appendChild(teamName);
+        btn.appendChild(odds);
 
-          btn.appendChild(teamName);
-          btn.appendChild(odds);
-
-          btn.dataset.team = selection.team;
-          btn.dataset.odds = String(selection.odds);
-          outrightContent.appendChild(btn);
-        });
+        btn.dataset.team = selection.team;
+        btn.dataset.odds = String(selection.odds);
+        outrightContent.appendChild(btn);
       });
     };
 
@@ -277,6 +289,7 @@ export default class Renders {
         resetOutrightButtons();
         outrightWinnerBtn.classList.add("active");
         renderOutrightData();
+        onTabChange();
       });
     }
 
@@ -287,16 +300,12 @@ export default class Renders {
         resetOutrightButtons();
         winnerGroupBtn.classList.add("active");
         renderOutrightGroups();
+        onTabChange();
       });
     }
 
     //on render
     renderOutrightData();
-
-    //on render ready
-    if (typeof onRenderReady === "function") {
-      onRenderReady();
-    }
   }
 
   renderKnockoutRounds(payload: TournamentType) {
@@ -651,7 +660,6 @@ export default class Renders {
       }
     });
 
-    console.log("GROUPS", formatedGroups);
     formatedGroups.forEach((round) => {
       //round header
       const h3 = document.createElement("h3");

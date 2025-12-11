@@ -1,13 +1,22 @@
 import { APP_LOG } from "../config/app";
-import { AppThemeOptions, Themes } from "../config/styles";
+import { LOGOS } from "../config/logos";
+import { AppThemeOptions, ThemeNames, Themes } from "../config/styles";
 import { getQueryParams } from "./core.Utils";
+
+interface ThemeGeneratori {
+  siteID: string | number;
+  gameID: string | number;
+}
 
 export class ThemeGenerator {
   private siteID: string | number;
+  private gameID: string | number;
   public name = "THEME";
+  private currentTheme: ThemeNames = ThemeNames.DEFAULT;
 
-  constructor(siteID: string | number) {
+  constructor({ siteID, gameID }: ThemeGeneratori) {
     this.siteID = siteID;
+    this.gameID = gameID;
   }
 
   public getCurrentVars(): AppThemeOptions {
@@ -17,8 +26,12 @@ export class ThemeGenerator {
     const currentTheme = Themes.find((theme) => theme.theme === themeID);
     const defaultTheme = Themes.find((theme) => theme.default);
 
-    if (!currentTheme) return defaultTheme;
+    if (!currentTheme) {
+      this.currentTheme = defaultTheme.theme;
+      return defaultTheme;
+    }
 
+    this.currentTheme = currentTheme.theme;
     return {
       ...defaultTheme,
       ...currentTheme,
@@ -27,14 +40,30 @@ export class ThemeGenerator {
 
   public async generateLogos(themeOptions: AppThemeOptions) {
     const root = document.documentElement;
-    const { logo, logoClient } = themeOptions;
+    const { logoClient } = themeOptions;
+
+    const currentLogo = LOGOS.find(
+      (logo) => logo.gameID === parseInt(this.gameID as string)
+    );
+    const logoHTMLElement = document.getElementById(
+      "app-logo"
+    ) as HTMLImageElement;
+    const screenLogoHTMLElement = document.getElementById(
+      "app-screen-logo"
+    ) as HTMLImageElement;
+
+    if (currentLogo && logoHTMLElement && screenLogoHTMLElement) {
+      let logoPath = currentLogo.logos.find(
+        (logo) => logo.theme === this.currentTheme
+      );
+      if (logoPath) {
+        logoHTMLElement.src = `./logos/${logoPath.path}`;
+        screenLogoHTMLElement.src = `./logos/${logoPath.path}`;
+      }
+    }
 
     if (logoClient) {
       root.style.setProperty("--client-logo", `url(${logoClient})`);
-    }
-
-    if (logo) {
-      root.style.setProperty("--global-logo", `url(${logo})`);
     }
   }
 

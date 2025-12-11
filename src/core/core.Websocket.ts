@@ -209,18 +209,29 @@ export default class WSCore {
     if (!payload) return;
     this.lastAction = RGS_ACTIONS.GAME;
 
-    let outrightPayload = payload.map((_payload) => ({
-      team: _payload.team,
-      stake,
-    }));
+    let outrightPayload = payload
+      .filter((payload) => payload.type === "outright")
+      .map((_payload) => ({
+        team: _payload.team,
+        stake,
+      }));
+
+    const groupPayload = payload
+      .filter((payload) => payload.type === "group")
+      .map((_payload) => ({
+        team: _payload.team,
+        stake,
+      }));
+
+    let requestPayload: any = {};
+    if (groupPayload.length) requestPayload.groupOutrightBets = groupPayload;
+    if (outrightPayload.length) requestPayload.outrightBets = outrightPayload;
 
     this.send({
       requestType: RGS_ACTIONS.GAME,
       publicState: {
         action: "BET",
-        payload: {
-          outrightBets: outrightPayload,
-        },
+        payload: requestPayload,
       },
     });
   }

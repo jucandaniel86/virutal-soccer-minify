@@ -8,14 +8,20 @@ export type AppThemeVars = {
   value: string;
 };
 
+export enum ThemeNames {
+  DEFAULT = "default",
+  VIRGIN = "virgin",
+  LIVESCORE_BET = "livescore-bet",
+  LIVESCORE = "livescore",
+}
+
 export type AppThemeOptions = {
   vars: AppThemeVars[];
   default: boolean;
   name: string;
   siteID: string | number;
-  logo: string;
   logoClient: string;
-  theme: string;
+  theme: ThemeNames;
 };
 
 export const Themes: AppThemeOptions[] = [
@@ -23,7 +29,7 @@ export const Themes: AppThemeOptions[] = [
     default: true,
     name: "Default Theme",
     siteID: "",
-    theme: "mock",
+    theme: ThemeNames.DEFAULT,
     vars: [
       { var: "base-color", value: "#e10a0a" },
       { var: "base-color-700", value: "#c10707" },
@@ -39,14 +45,13 @@ export const Themes: AppThemeOptions[] = [
       { var: "grey-700", value: "#292b38" },
       { var: "bet-buttons-height", value: "42px" },
     ],
-    logo: "",
     logoClient: "",
   },
   {
     default: false,
     name: "Virgin",
     siteID: "VRG",
-    theme: "virgin",
+    theme: ThemeNames.VIRGIN,
     vars: [
       { var: "base-color", value: "#e10a0a" },
       { var: "base-color-700", value: "#c10707" },
@@ -62,14 +67,13 @@ export const Themes: AppThemeOptions[] = [
       { var: "bet-buttons-height", value: "42px" },
       { var: "topbar-bg-color", value: "#e10a0a" },
     ],
-    logo: GeneralLogo.default,
     logoClient: VirginBetLogo.default,
   },
   {
     default: false,
     name: "LiveScore Bet",
     siteID: "MOCK",
-    theme: "livescore-bet",
+    theme: ThemeNames.LIVESCORE_BET,
     vars: [
       { var: "base-color", value: "#f85b00" },
       { var: "base-color-700", value: "#d65002" },
@@ -122,14 +126,13 @@ export const Themes: AppThemeOptions[] = [
       { var: "app-game-name-textcolor", value: "#fff" },
       { var: "outright-bet-textcolor", value: "#fff" },
     ],
-    logo: GeneralLogo.default,
     logoClient: LivescoreBet.default,
   },
   {
     default: false,
     name: "LiveScore Bet",
     siteID: "MOCK",
-    theme: "livescore",
+    theme: ThemeNames.LIVESCORE,
     vars: [
       { var: "base-color", value: "#f85b00" },
       { var: "base-color-700", value: "#d65002" },
@@ -183,7 +186,6 @@ export const Themes: AppThemeOptions[] = [
       { var: "app-game-name-textcolor", value: "#fff" },
       { var: "outright-bet-textcolor", value: "#fff" },
     ],
-    logo: GeneralLogo.default,
     logoClient: Livescore.default,
   },
 ];

@@ -377,7 +377,7 @@ background-color: #333;
 }
 .overlay {
   position: absolute;
-  top: 65px;
+  top: 57px;
   left: 0;
   right: 0;
   bottom: 25px;
@@ -781,11 +781,11 @@ background-color: #333;
 }
 
 .logo {
-  background-image: var(--global-logo);
+  /* background-image: var(--global-logo); */
   background-size: contain;
   background-repeat: no-repeat;
-  width: 190px;
-  height: 220px;
+  width: 75%;
+  /* height: 220px; */
   display: block;
   margin: 0 auto;
 }

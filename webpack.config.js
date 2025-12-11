@@ -7,6 +7,7 @@ import { type } from "os";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const buildPath = "build";
 const resPath = "history";
+const logoPath = "logos";
 const entry = "./src/index.ts";
 const module = {
   rules: [
@@ -21,11 +22,10 @@ const module = {
       exclude: /node_modules/,
     },
     {
-      test: /\.(jpe?g|png|gif)$/i,
-      loader: "file-loader",
+      test: /\.(png|svg|jpg|jpeg|gif)$/i,
       type: "asset/resource",
-      options: {
-        name: "[name].[ext]",
+      generator: {
+        filename: "[name][ext]",
       },
     },
   ],
@@ -57,6 +57,16 @@ const plugins = [
       {
         from: "history/",
         to: _resolve(__dirname, buildPath + "/" + resPath),
+        globOptions: {
+          ignore: [
+            // Ignore all `flp` editor files
+            "**/*.flp",
+          ],
+        },
+      },
+      {
+        from: "logos/",
+        to: _resolve(__dirname, buildPath + "/" + logoPath),
         globOptions: {
           ignore: [
             // Ignore all `flp` editor files

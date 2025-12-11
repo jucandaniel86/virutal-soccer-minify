@@ -114,6 +114,7 @@ export type CurrentRoundType = {
 export type OutrightTeamType = {
   team: string;
   odds: number;
+  type: string;
 };
 
 export type OutrightGroupType = {
@@ -123,7 +124,7 @@ export type OutrightGroupType = {
 
 export type OutrightBettingType = {
   teamOdds: OutrightTeamType[];
-  groups?: OutrightGroupType[];
+  groupOdds?: OutrightTeamType[];
 };
 
 export type PublicViewType = {
