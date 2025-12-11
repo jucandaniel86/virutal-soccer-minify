@@ -213,17 +213,17 @@ export default class WSCore {
       .filter((payload) => payload.type === "outright")
       .map((_payload) => ({
         team: _payload.team,
-        stake,
       }));
 
     const groupPayload = payload
       .filter((payload) => payload.type === "group")
       .map((_payload) => ({
         team: _payload.team,
-        stake,
       }));
 
-    let requestPayload: any = {};
+    let requestPayload: any = {
+      stake,
+    };
     if (groupPayload.length) requestPayload.groupOutrightBets = groupPayload;
     if (outrightPayload.length) requestPayload.outrightBets = outrightPayload;
 
@@ -236,7 +236,7 @@ export default class WSCore {
     });
   }
 
-  bet(bets: BetItemType[], betType: number): void {
+  bet(bets: BetItemType[], betType: number, stake: number): void {
     if (!bets || bets.length === 0) return;
 
     this.lastAction = RGS_ACTIONS.GAME;
@@ -247,6 +247,7 @@ export default class WSCore {
         payload: {
           isCombinedBet: betType === 2 ? true : false,
           bets,
+          stake,
         },
       },
     });

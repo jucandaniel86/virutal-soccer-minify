@@ -135,6 +135,7 @@ export type PublicViewType = {
   previousRound: CurrentRoundType;
   canPlaceOutrightBets: boolean;
   outrightBetting?: OutrightBettingType;
+  maxWin: number;
 };
 
 export type RoundBetsPlayer = {
@@ -164,7 +165,7 @@ export type PlayerViewType = {
 };
 
 export type BetItemType = {
-  stake: number | string;
+  // stake: number | string;
   matchId: string;
   outcome: string;
 };

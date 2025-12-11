@@ -43,6 +43,7 @@ export let __SelectedOutrightTeam: OutrightTeamType[] = [];
 export let __CurrentRound = "";
 export let __OutrightBettingRound = false;
 export let __FixedPlayerReference = "";
+export let __MaxWin = 0;
 
 /* GROUPS */
 // const GROUPS = {
@@ -261,6 +262,7 @@ export const onResponse = (response: any) => {
         handleOutrightBets,
         handleOutrightTabChange
       );
+      __MaxWin = __PublicView.maxWin;
 
       if (OUTRIGHT_TEST) {
         __Renders.renderOutrightBetting(
@@ -378,6 +380,8 @@ export const onBroadcastResponse = (response: any) => {
   });
   __BetOptions.resetBets();
   __ChampionshipEnded = __PublicView.tournament.isEnded;
+
+  __MaxWin = __PublicView.maxWin;
 };
 
 const handleStakeChange = (_stake: any) => {
@@ -387,6 +391,16 @@ const handleStakeChange = (_stake: any) => {
 
 const handlePlaceBet = async () => {
   if (!__CurrentBets || __CurrentBets.length === 0 || !__CurrentStake) return;
+
+  const maxWin: HTMLElement = document.querySelector("#max-win");
+
+  if (parseInt(maxWin.dataset.valid) === 2) {
+    __Modal.showErrorModal(
+      "Your bet selection reached the maximum win allowed. Please deselect some bets to be able to place a bet.",
+      true
+    );
+    return;
+  }
 
   if (__SelectedOutrightTeam && __OutrightBettingRound) {
     __Websocket.outrightBet(
@@ -403,9 +417,12 @@ const handlePlaceBet = async () => {
   const CurrentBets = __CurrentBets.map((bet: any) => ({
     matchId: bet.matchId,
     outcome: `${bet.outcome}`,
-    stake: parseFloat(Number(__CurrentStake).toFixed(2)),
   }));
-  __Websocket.bet(CurrentBets, __BetType);
+  __Websocket.bet(
+    CurrentBets,
+    __BetType,
+    parseFloat(Number(__CurrentStake).toFixed(2))
+  );
 
   if (betBtn) {
     betBtn.disabled = true;

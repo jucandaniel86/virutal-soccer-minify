@@ -1,4 +1,5 @@
 import { OutrightTeamType } from "../config/app";
+import { __MaxWin } from "./core";
 
 type BetItemType = {
   matchId: string;
@@ -12,6 +13,8 @@ interface BetOptionsInterface {
 }
 
 export default class BetOptions {
+  private MAX_WIN_LIMIT = 10;
+
   bets: BetItemType[] = [];
   onBetChange = (_payload: BetItemType[]) => {};
   onBetTypeChange = (_payload: number) => {};
@@ -219,6 +222,14 @@ export default class BetOptions {
     //@ts-ignore
     this.totalOutlay.textContent = outlay;
     this.maxWin.textContent = maxWin.toFixed(2);
+
+    if (maxWin >= __MaxWin) {
+      this.maxWin.classList.add("warning");
+      this.maxWin.dataset.valid = "2";
+    } else {
+      this.maxWin.classList.remove("warning");
+      this.maxWin.dataset.valid = "1";
+    }
 
     if (this.betsCounter) {
       // this.betsCounter.textContent = String(this.bets.length);
